@@ -1,6 +1,5 @@
 
 // Estructuras globales e inicializaciones
-var boxDrawer;          // clase para contener el comportamiento de la caja
 var meshDrawer;         // clase para contener el comportamiento de la malla
 var canvas, gl;         // canvas y contexto WebGL
 var perspectiveMatrix;	// matriz de perspectiva
@@ -25,7 +24,6 @@ function InitWebGL()
 	gl.enable(gl.DEPTH_TEST); // habilitar test de profundidad 
 	
 	// Inicializar los shaders y buffers para renderizar	
-	boxDrawer  = new BoxDrawer();
 	meshDrawer = new MeshDrawer();
 	
 	// Setear el tamaño del viewport
@@ -93,9 +91,6 @@ function DrawScene()
 	// 3. Le pedimos a cada objeto que se dibuje a si mismo
 	var nrmTrans = [ mv[0],mv[1],mv[2], mv[4],mv[5],mv[6], mv[8],mv[9],mv[10] ];
 	meshDrawer.draw( mvp, mv, nrmTrans );
-	if ( showBox.checked ) {
-		boxDrawer.draw( mvp );
-	}
 }
 
 // Función que compila los shaders que se le pasan por parámetro (vertex & fragment shaders)
@@ -165,12 +160,9 @@ function MatrixMult( A, B )
 
 // ======== Funciones para el control de la interfaz ========
 
-var showBox = {checked: false};  // boleano para determinar si se debe o no mostrar la caja
-
 // Al cargar la página
 window.onload = function() 
 {
-	// showBox = document.getElementById('show-box');
 	document.getElementById('world-seed').value = seed;
 	InitWebGL();
 	
@@ -465,20 +457,6 @@ function AutoRotateLight( param )
 	}
 }
 
-// Control de textura visible
-function ShowTexture( param )
-{
-	meshDrawer.showTexture( param.checked );
-	DrawScene();
-}
-
-// Control de intercambiar y-z
-function SwapYZ( param )
-{
-	meshDrawer.swapYZ( param.checked );
-	DrawScene();
-}
-
 // Cargar archivo obj
 function LoadObj( param )
 {
@@ -487,7 +465,6 @@ function LoadObj( param )
 		var reader = new FileReader();
 		reader.onload = function(e) 
 		{
-			// LoadObjFromString(e.target.result);
 			ReloadWorld();
 		}
 		reader.readAsText( param.files[0] );
@@ -513,9 +490,9 @@ function LoadObjFromString(obj, isAtmosphere) {
 	mesh.shiftAndScale( shift, scale );
 	var buffers = mesh.getVertexBuffers();
 	if (!isAtmosphere) {
-		meshDrawer.setMesh( buffers.positionBuffer, buffers.texCoordBuffer, buffers.normalBuffer );
+		meshDrawer.setMesh( buffers.positionBuffer, buffers.normalBuffer );
 	} else {
-		meshDrawer.setAtmosphereMesh( buffers.positionBuffer, buffers.texCoordBuffer, buffers.normalBuffer );
+		meshDrawer.setAtmosphereMesh( buffers.positionBuffer, buffers.normalBuffer );
 	}
 	DrawScene();
 }

@@ -1,7 +1,5 @@
 precision mediump float;
 
-	uniform sampler2D texGPU;
-
 	uniform mat4 mv;
 	uniform mat3 mn;
 	uniform vec3 lightDir;
@@ -26,7 +24,6 @@ precision mediump float;
 		vec4 I = vec4(1.0, 1.0, 1.0, 1.0);
 		vec4 Ks = I;
 		vec4 Ia = vec4(0.2, 0.2, 0.2, 0.2);
-		// vec4 Ka = vec4(157.0 / 255.0, 190.0 / 255.0, 190.0 / 255.0, 1.0);
 
 		vec4 Kd;
 		
@@ -51,10 +48,6 @@ precision mediump float;
 		Ka.y /= 2.0;
 		Ka.z /= 2.0; // Darken color when unlighted
 
-		// if (useTex == 1) {
-			// Kd = texture2D(texGPU, texCoord);
-		// }
-		
 		vec3 n = mn * normCoord;
 		float cosTheta = dot(n, lightDir);
 		vec4 v = -(mv * vertCoord);
