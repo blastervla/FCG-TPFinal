@@ -41,7 +41,7 @@ input[type=range] {
 }
 .control-group {
 	position: relative;
-	max-width: 12em;
+	max-width: 14em;
 	border: solid white;
     border-width: 1px;
     border-radius: 4px;
@@ -50,8 +50,8 @@ input[type=range] {
 	padding: 0.2em;
 }
 #lightcontrol {
-	width:  12em;
-	height: 12em;
+	width:  14em;
+	height: 14em;
 	background-color: rgb(65, 72, 78);
 	outline: 1px solid white;
 	outline-offset: -1px;
@@ -62,23 +62,16 @@ input[type=range] {
 	left: 0.2em;
 	pointer-events: none;
 }
-#shininess-label {
-	float: left;
-}
-#shininess-value {
-	float: right;
-	text-align: right;
-	width: 4em;
-}
+
 @media (orientation: landscape) {
 	#canvas-div {
 		display: inline-block;
-		width:  calc(100% - 14em);
+		width:  calc(100% - 16em);
 		height: 100%;
 	}
 	#controls-div {
 		display: inline-block;
-		width:   14em;
+		width:   16em;
 		height: 100%;
 	}
 	.control-group {
@@ -93,11 +86,11 @@ input[type=range] {
 @media (orientation: portrait) {
 	#canvas-div {
 		width:  100%;
-		height: calc(100% - 14em);
+		height: calc(100% - 16em);
 	}
 	#controls-div {
 		width:  100%;
-		height: 14em;
+		height: 16em;
 	}
 	.control-group {
 		display: inline-block;
