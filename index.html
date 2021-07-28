@@ -26,6 +26,7 @@
                 General
                 <div class="control-group">
                     <!-- <div class="control"><input id="show-box" name="show-box" type="checkbox" onchange="DrawScene()" checked /><label for="show-box"> Mostrar caja</label></div> -->
+                    <div class="control"><input id="atmosphere" name="atmosphere" type="checkbox" checked onchange="SetAtmosphere(this)"/><label for="atmosphere"> Atmósfera</label></div>
                     <div class="control"><input id="auto-rotate" name="auto-rotate" type="checkbox" checked onchange="AutoRotate(this)"/><label for="auto-rotate"> Rotación</label></div>
                     <div class="control"><input id="auto-rotate-light" name="auto-rotate-light" type="checkbox" onchange="AutoRotateLight(this)"/><label for="auto-rotate-light"> Ciclo solar</label></div>
                     <div class="control"><span id="shininess-label">Distancia solar:</span><span id="shininess-value">1</span><input id="shininess-exp" type="range" min="0" max="100" value="50" oninput="SetShininess(this)"/></div>
@@ -66,7 +67,7 @@
                     <div class="control">Atmosfera:<br/><input id="texture" type="file" onchange="LoadTexture(this)" accept="image/*"/></div>
                 </div>
 			</div>
-            <img hidden id="texture-img" />
+            <img hidden id="texture-img" crossorigin="anonymous"/>
 		</div>
 		<div id="canvas-div"><canvas id="canvas"></canvas></div>
 	</body>

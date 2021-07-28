@@ -230,6 +230,8 @@ window.onload = function()
 	DrawScene();
 
 	ReloadWorld();
+
+	LoadAtmosphere();
 };
 
 // Evento resize
@@ -538,6 +540,17 @@ function LoadTexture( param )
 	}
 }
 
+function LoadAtmosphere() {
+	var img = document.getElementById('texture-img');
+	img.onload = function() 
+	{
+		meshDrawer.setTexture( img );
+		DrawScene();
+	}
+	img.src = "https://blastervla.github.io/FCG-TPFinal/textures/clouds.jpg";
+}
+
+
 // Setear Intensidad
 function SetShininess( param )
 {
@@ -545,6 +558,12 @@ function SetShininess( param )
 	var s = Math.pow(10,exp/25);
 	document.getElementById('shininess-value').innerText = s.toFixed( s < 10 ? 2 : 0 );
 	meshDrawer.setShininess(s);
+	DrawScene();
+}
+
+function SetAtmosphere( param )
+{
+	meshDrawer.setAtmosphere(param.checked)
 	DrawScene();
 }
 
