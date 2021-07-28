@@ -134,20 +134,8 @@ class MeshDrawer {
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
 	}
 
-	// Esta función se llama para dibujar la malla de triángulos
-	// El argumento es la matriz model-view-projection (matrixMVP),
-	// la matriz model-view (matrixMV) que es retornada por 
-	// GetModelViewProjection y la matriz de transformación de las 
-	// normales (matrixNormal) que es la inversa transpuesta de matrixMV
-	draw(matrixMVP, matrixMV, matrixNormal) {
-		if (this.shouldShowAtmosphere) {
-			this.drawAtmosphere(matrixMVP, matrixMV, matrixNormal);
-		}
-
-		this.drawPlanet(matrixMVP, matrixMV, matrixNormal);
-	}
-
 	drawAtmosphere(matrixMVP, matrixMV, matrixNormal) {
+		if (!this.shouldShowAtmosphere) { return; }
 		gl.disable(gl.DEPTH_TEST);
 
 		// 1. Seleccionamos el shader
