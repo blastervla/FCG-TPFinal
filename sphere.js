@@ -224,33 +224,33 @@ class ShapeCreator {
 
         let noiseMachine = new Noise(noiseSeed);
         for (let i = 0; i < this.vertices.length; i++) {
-            if (!!noiseSeed) {
-                let continent = noiseMachine.simpleNoise(
-                    this.vertices[i], continentOpts.numLayers, continentOpts.scale / 1000, 
-                    continentOpts.persistence, continentOpts.lacunarity, continentOpts.multiplier
-                );
+            // if (!!noiseSeed) {
+            //     let continent = noiseMachine.simpleNoise(
+            //         this.vertices[i], continentOpts.numLayers, continentOpts.scale / 1000, 
+            //         continentOpts.persistence, continentOpts.lacunarity, continentOpts.multiplier
+            //     );
 
-                let ocean = -oceanOpts.depth + continent * 0.15;
-                continent = noiseMachine.smoothMax(continent, ocean, oceanOpts.smoothing);
-                continent *= continent < 0 ? 1 + oceanOpts.depthMultiplier : 1;
-                continent *= -1;
+            //     let ocean = -oceanOpts.depth + continent * 0.15;
+            //     continent = noiseMachine.smoothMax(continent, ocean, oceanOpts.smoothing);
+            //     continent *= continent < 0 ? 1 + oceanOpts.depthMultiplier : 1;
+            //     continent *= -1;
 
-                // let mountainMask = noiseMachine.blend(0, mountainOpts.blend, noiseMachine.simpleNoise(
-                //     this.vertices[i], mountainOpts.numLayers, mountainOpts.scale, 
-                //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.multiplier
-                // ));
-                // let mountains = noiseMachine.smoothedRidgidNoise(
-                //     this.vertices[i], mountainOpts.offset, mountainOpts.numLayers, 
-                //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.scale, 
-                //     mountainOpts.multiplier, mountainOpts.power, mountainOpts.gain, mountainOpts.verticalShift
-                // ) * mountainMask;
+            //     // let mountainMask = noiseMachine.blend(0, mountainOpts.blend, noiseMachine.simpleNoise(
+            //     //     this.vertices[i], mountainOpts.numLayers, mountainOpts.scale, 
+            //     //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.multiplier
+            //     // ));
+            //     // let mountains = noiseMachine.smoothedRidgidNoise(
+            //     //     this.vertices[i], mountainOpts.offset, mountainOpts.numLayers, 
+            //     //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.scale, 
+            //     //     mountainOpts.multiplier, mountainOpts.power, mountainOpts.gain, mountainOpts.verticalShift
+            //     // ) * mountainMask;
 
-                let finalHeight = radius + (continent /*+ mountains*/) * radius * 0.01;
+            //     let finalHeight = radius + (continent /*+ mountains*/) * radius * 0.01;
 
-                this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], finalHeight);
-            } else {
+            //     this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], finalHeight);
+            // } else {
                 this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], radius);
-            }
+            // }
         }
     }
 }
@@ -272,14 +272,6 @@ class SphereCreator {
         ];
 
         let tids = [
-            // creator.addTriangle(vids[1], vids[2], vids[0]),
-            // creator.addTriangle(vids[1], vids[0], vids[5]),
-            // creator.addTriangle(vids[0], vids[2], vids[4]),
-            // creator.addTriangle(vids[0], vids[4], vids[5]),
-            // creator.addTriangle(vids[4], vids[3], vids[5]),
-            // creator.addTriangle(vids[2], vids[3], vids[4]),
-            // creator.addTriangle(vids[1], vids[5], vids[3]),
-            // creator.addTriangle(vids[1], vids[3], vids[2]),
             creator.addTriangle(vids[0], vids[1], vids[2]),
             creator.addTriangle(vids[1], vids[3], vids[2]),
             creator.addTriangle(vids[3], vids[4], vids[2]),

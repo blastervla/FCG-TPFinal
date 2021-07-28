@@ -70,3 +70,16 @@ float gln_perlin(vec3 P) {
   float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x);
   return 2.2 * n_xyz;
 }
+
+float simpleNoise(vec3 pos, float numLayers, float frequency, float persistence, float lacunarity, float multiplier) {
+    float noiseSum = 0.0;
+    float amplitude = 1.0;
+    for (float i = 0.0; i < 10.0; i++) {
+      if (i < numLayers) {
+        noiseSum += gln_perlin(pos * frequency) * amplitude;
+        amplitude *= persistence;
+        frequency *= lacunarity;
+      }
+    }
+    return noiseSum * multiplier;
+}
