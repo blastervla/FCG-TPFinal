@@ -29,6 +29,18 @@ class Vertex {
         );
     }
 
+    // dot(other) {
+    //     return this.x * other.x + this.y * other.y + this.z * other.z;
+    // }
+
+    // floor() {
+    //     return new Vertex(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z))
+    // }
+
+    // mod(n) {
+    //     return new Vertex(this.x % n, this.y % n, this.z % n);
+    // }
+
     subdividedSegmentWith(other, n) {
         let newVertices = [this];
         for (let i = 1; i < n; i++) {
@@ -222,31 +234,42 @@ class ShapeCreator {
 
     spherizeAlong(center, radius, noiseSeed, continentOpts, oceanOpts, mountainOpts) {
 
-        let noiseMachine = new Noise(noiseSeed);
+        // let noiseMachine = new Noise(noiseSeed);
         for (let i = 0; i < this.vertices.length; i++) {
-            let continent = noiseMachine.simpleNoise(
-                this.vertices[i], continentOpts.numLayers, continentOpts.scale, 
-                continentOpts.persistence, continentOpts.lacunarity, continentOpts.multiplier
-            );
 
-            let ocean = -oceanOpts.depth + continent * 0.15;
-            continent = noiseMachine.smoothMax(continent, ocean, oceanOpts.smoothing);
-            continent *= continent < 0 ? 1 + oceanOpts.depthMultiplier : 1;
-            continent *= -1;
+            // let seed = noiseSeed;
+            // let mask = gln_normalize(gln_simplex(
+            // (point + ((seed * 100.0) + (seed * 1000.0))) * uMaskOpts.scale));
 
-            let mountainMask = noiseMachine.blend(0, mountainOpts.blend, noiseMachine.simpleNoise(
-                this.vertices[i], mountainOpts.numLayers, mountainOpts.scale, 
-                mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.multiplier
-            ));
-            let mountains = noiseMachine.smoothedRidgidNoise(
-                this.vertices[i], mountainOpts.offset, mountainOpts.numLayers, 
-                mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.scale, 
-                mountainOpts.multiplier, mountainOpts.power, mountainOpts.gain, mountainOpts.verticalShift
-            ) * mountainMask;
+            // let opts1 = uSimplexOpts;
+            // opts1.redistribution = 1.0;
+            // let f_simplex = gln_normalize(gln_sfbm(point, opts1));
 
-            let finalHeight = radius + (continent + mountains) * radius * 0.01;
+            // let opts2 = uRidgeOpts;
+            // opts2.redistribution = 1.0;
+            // let f_ridge = gln_normalize(gln_sfbm(point, opts2));
 
-            this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], finalHeight);
+            // let blend = gln_blend(vec4(f_ridge),
+            //                         vec4(f_simplex * uWorldOpts.simplexOpacity), gln_ADD)
+            //                     .x;
+            // let f = blend;
+
+            // blend = gln_blend(vec4(f), vec4(mask), gln_MULTIPLY).x;
+            // f = blend;
+
+            // if (f < uWorldOpts.seaLevel)
+            //     f = uWorldOpts.seaLevel;
+
+            // f *= uWorldOpts.height;
+            // vHeight = f;
+            // p = point + (normal * (f));
+
+            // return p;
+
+            // let finalHeight = radius + (continent + mountains) * radius * 0.01;
+
+            // this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], finalHeight);
+            this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], radius);
         }
     }
 }

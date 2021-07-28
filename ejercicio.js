@@ -1,59 +1,3 @@
-
-// <============================================ EJERCICIOS ============================================>
-// a) Implementar la función:
-//
-//      GetModelViewMatrix( translationX, translationY, translationZ, rotationX, rotationY )
-//
-//    Si la implementación es correcta, podrán hacer rotar la caja correctamente (como en el video). Notar 
-//    que esta función no es exactamente la misma que implementaron en el TP4, ya que no recibe por parámetro
-//    la matriz de proyección. Es decir, deberá retornar solo la transformación antes de la proyección model-view (MV)
-//    Es necesario completar esta implementación para que funcione el control de la luz en la interfaz. 
-//    IMPORTANTE: No es recomendable avanzar con los ejercicios b) y c) si este no funciona correctamente. 
-//
-// b) Implementar los métodos:
-//
-//      setMesh( vertPos, texCoords, normals )
-//      swapYZ( swap )
-//      draw( matrixMVP, matrixMV, matrixNormal )
-//
-//    Si la implementación es correcta, podrán visualizar el objeto 3D que hayan cargado, asi como también intercambiar 
-//    sus coordenadas yz. Notar que es necesario pasar las normales como atributo al VertexShader. 
-//    La función draw recibe ahora 3 matrices en column-major: 
-//
-//       * model-view-projection (MVP de 4x4)
-//       * model-view (MV de 4x4)
-//       * normal transformation (MV_3x3)
-//
-//    Estas últimas dos matrices adicionales deben ser utilizadas para transformar las posiciones y las normales del 
-//    espacio objeto al esapcio cámara. 
-//
-// c) Implementar los métodos:
-//
-//      setTexture( img )
-//      showTexture( show )
-//
-//    Si la implementación es correcta, podrán visualizar el objeto 3D que hayan cargado y su textura.
-//    Notar que los shaders deberán ser modificados entre el ejercicio b) y el c) para incorporar las texturas.
-//  
-// d) Implementar los métodos:
-//
-//      setLightDir(x,y,z)
-//      setShininess(alpha)
-//    
-//    Estas funciones se llaman cada vez que se modifican los parámetros del modelo de iluminación en la 
-//    interface. No es necesario transformar la dirección de la luz (x,y,z), ya viene en espacio cámara.
-//
-// Otras aclaraciones: 
-//
-//      * Utilizaremos una sola fuente de luz direccional en toda la escena
-//      * La intensidad I para el modelo de iluminación debe ser seteada como blanca (1.0,1.0,1.0,1.0) en RGB
-//      * Es opcional incorporar la componente ambiental (Ka) del modelo de iluminación
-//      * Los coeficientes Kd y Ks correspondientes a las componentes difusa y especular del modelo 
-//        deben ser seteados con el color blanco. En caso de que se active el uso de texturas, la 
-//        componente difusa (Kd) será reemplazada por el valor de textura. 
-//        
-// <=====================================================================================================>
-
 // Esta función recibe la matriz de proyección (ya calculada), una 
 // traslación y dos ángulos de rotación (en radianes). Cada una de 
 // las rotaciones se aplican sobre el eje x e y, respectivamente. 
@@ -104,7 +48,8 @@ class MeshDrawer
 		this.show = true;
 
 		let libs = "\n" + loadFile("./shaders/commonNoise.glsl") 
-				 + "\n" + loadFile("./shaders/perlinNoise.glsl");
+				 + "\n" + loadFile("./shaders/blendModes.glsl") 
+				 + "\n" + loadFile("./shaders/simplexNoise.glsl");
 		let meshVS = libs + loadFile("./shaders/vertexShader.glsl");
 		
 		let meshFS = loadFile("./shaders/fragmentShader.glsl");
@@ -116,7 +61,6 @@ class MeshDrawer
 		this.mvp = gl.getUniformLocation( this.prog, 'mvp' );
 		this.mv = gl.getUniformLocation( this.prog, 'mv' );
 		this.mn = gl.getUniformLocation( this.prog, 'mn' );
-		this.shouldSwapYZ = gl.getUniformLocation(this.prog, 'shouldSwapYZ');
 		this.lightDir = gl.getUniformLocation(this.prog, 'lightDir');
 		this.shininess = gl.getUniformLocation(this.prog, 'shininess');
 
@@ -139,6 +83,62 @@ class MeshDrawer
 		// Creamos el buffer para las coordenadas de textura y la textura
 		this.textureBuffer = gl.createBuffer();
 		this.texture = gl.createTexture();
+
+		// Agrego todas las uniformes para el planeta
+		this.maskScale = gl.getUniformLocation(this.prog, 'maskScale');
+
+		this.planetHeight = gl.getUniformLocation(this.prog, 'planetHeight');
+		this.seaLevel = gl.getUniformLocation(this.prog, 'seaLevel');
+		this.planetNoiseOpacity = gl.getUniformLocation(this.prog, 'planetNoiseOpacity');
+
+		this.ridgeParams = {
+			seed: gl.getUniformLocation(this.prog, 'ridgeParams.seed'),
+			persistance: gl.getUniformLocation(this.prog, 'ridgeParams.persistance'),
+			lacunarity: gl.getUniformLocation(this.prog, 'ridgeParams.lacunarity'),
+			scale: gl.getUniformLocation(this.prog, 'ridgeParams.scale'),
+			redistribution: gl.getUniformLocation(this.prog, 'ridgeParams.redistribution'),
+			octaves: gl.getUniformLocation(this.prog, 'ridgeParams.octaves'),
+			turbulence: gl.getUniformLocation(this.prog, 'ridgeParams.turbulence'),
+			ridge: gl.getUniformLocation(this.prog, 'ridgeParams.ridge'),
+		};
+
+		this.params = {
+			seed: gl.getUniformLocation(this.prog, 'params.seed'),
+			persistance: gl.getUniformLocation(this.prog, 'params.persistance'),
+			lacunarity: gl.getUniformLocation(this.prog, 'params.lacunarity'),
+			scale: gl.getUniformLocation(this.prog, 'params.scale'),
+			redistribution: gl.getUniformLocation(this.prog, 'params.redistribution'),
+			octaves: gl.getUniformLocation(this.prog, 'params.octaves'),
+			turbulence: gl.getUniformLocation(this.prog, 'params.turbulence'),
+			ridge: gl.getUniformLocation(this.prog, 'params.ridge'),
+		};
+	}
+
+	setPlanetParams(planetParams, ridgeParams, miscParams) {
+		gl.useProgram(this.prog);
+
+		gl.uniform1f(this.maskScale, planetParams.scale);
+		gl.uniform1f(this.planetHeight, planetParams.height);
+		gl.uniform1f(this.seaLevel, planetParams.seaLevel);
+		gl.uniform1f(this.planetNoiseOpacity, planetParams.noiseOpacity);
+
+		for (const key in this.ridgeParams) {
+			if (key === 'octaves' || key === 'turbulence' || key === 'ridge') {
+				gl.uniform1i(this.ridgeParams[key], ridgeParams[key]);
+				continue; 
+			}
+
+			gl.uniform1f(this.ridgeParams[key], ridgeParams[key]);
+		}
+
+		for (const key in this.params) {
+			if (key === 'octaves' || key === 'ridge') {
+				gl.uniform1i(this.params[key], miscParams[key]);
+				continue; 
+			}
+
+			gl.uniform1f(this.params[key], miscParams[key]);
+		}
 	}
 	
 	// Esta función se llama cada vez que el usuario carga un nuevo
@@ -166,14 +166,6 @@ class MeshDrawer
 		// 3. Binding y seteo del buffer de normales
 		gl.bindBuffer( gl.ARRAY_BUFFER, this.normalsBuffer );
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
-	}
-	
-	// Esta función se llama cada vez que el usuario cambia el estado del checkbox 'Intercambiar Y-Z'
-	// El argumento es un boleano que indica si el checkbox está tildado
-	swapYZ( swap )
-	{
-		gl.useProgram(this.prog);
-		gl.uniform1i(this.shouldSwapYZ, swap ? 1 : 0);
 	}
 	
 	// Esta función se llama para dibujar la malla de triángulos

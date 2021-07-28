@@ -31,35 +31,33 @@
                     <div class="control"><input id="rotation-speed" type="range" min="1" max="100" value="50" disabled/></div>
                     <div class="control"><span id="shininess-label">Intensidad:</span><span id="shininess-value">1</span><input id="shininess-exp" type="range" min="0" max="100" value="50" oninput="SetShininess(this)"/></div>
                 </div>
-                Continent
+                Planet
                 <div class="control-group">
 					<div class="control"><span id="world-size-label">World Size:</span><span id="world-size-value">10</span><input id="world-size" type="range" min="1" max="50" value="10" oninput="ChangeWorldSize(this.value)"/></div>
-                    <div class="control"><div id="world-seed-label">Seed:</div><input id="world-seed" type="number" min="1" maxlength="9" oninput="ChangeWorldSeed(this.value)" style="width: 90px"/></div>
-                    <div class="control"><span id="world-numLayers-label">NumLayers:</span><span id="world-numLayers-value">1</span><input id="numLayers" type="range" min="1" max="10" value="1" oninput="ChangeContinentNumLayers(this.value)"/></div>
-                    <div class="control"><span id="world-scale-label">Scale:</span><span id="world-scale-value">1</span><input id="scale" type="range" step="0.1" min="0" max="10" value="1" oninput="ChangeContinentScale(this.value)"/></div>
-                    <div class="control"><span id="world-persistence-label">Persistence:</span><span id="world-persistence-value">1</span><input id="persistence" type="range" min="1" max="50" value="1" oninput="ChangeContinentPersistence(this.value)"/></div>
-                    <div class="control"><span id="world-lacunarity-label">Lacunarity:</span><span id="world-lacunarity-value">1</span><input id="lacunarity" type="range" min="1" max="50" value="1" oninput="ChangeContinentLacunarity(this.value)"/></div>
-                    <div class="control"><span id="world-multiplier-label">Multiplier:</span><span id="world-multiplier-value">1</span><input id="multiplier" type="range" min="1" max="50" value="1" oninput="ChangeContinentMultiplier(this.value)"/></div>
-                </div>
-                Ocean
-                <div class="control-group">
-                    <div class="control"><span id="ocean-depth-label">Depth:</span><span id="ocean-depth-value">10</span><input id="ocean-depth" type="range" step="0.05" min="0" max="20" value="10" oninput="ChangeOceanDepth(this.value)"/></div>
-                    <div class="control"><span id="ocean-depthMultiplier-label">DepthMultiplier:</span><span id="ocean-depthMultiplier-value">10</span><input id="ocean-depthMultiplier" type="range" step="0.05" min="0" max="20" value="10" oninput="ChangeOceanDepthMultiplier(this.value)"/></div>
-                    <div class="control"><span id="ocean-smoothing-label">Smoothing:</span><span id="ocean-smoothing-value">1</span><input id="ocean-smoothing" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeOceanSmoothing(this.value)"/></div>
-                </div>
+                    <div class="control"><div id="planet-seed-label">Seed:</div><input id="planet-seed" type="number" min="1" maxlength="9" oninput="ChangePlanetSeed(this.value)" style="width: 90px"/></div>
+                    <div class="control"><span id="planet-mask-scale-label">Mask scale:</span><span id="planet-mask-scale-value">10</span><input id="planet-mask-scale" type="range" min="0.01" max="5" step="0.01" value="0.5" oninput="ChangePlanetMaskScale(this.value)"/></div>
+                    <div class="control"><span id="planet-height-label">Height:</span><span id="planet-height-value">10</span><input id="planet-height" type="range" min="0.01" max="10" step="0.01" value="1" oninput="ChangePlanetHeight(this.value)"/></div>
+                    <div class="control"><span id="planet-seaLevel-label">Sea level:</span><span id="planet-seaLevel-value">10</span><input id="planet-seaLevel" type="range" min="-2" max="2" step="0.01" value="0.25" oninput="ChangePlanetSeaLevel(this.value)"/></div>
+                    <div class="control"><span id="planet-noiseOpacity-label">Planet Detail:</span><span id="planet-noiseOpacity-value">10</span><input id="planet-noiseOpacity" type="range" min="0" max="1" step="0.01" value="0.2" oninput="ChangePlanetNoiseOpacity(this.value)"/></div>
 
+                    <div class="control"><span id="planet-persistance-label">Smoothness:</span><span id="planet-numLayers-value">1</span><input id="planet-persistance" type="range" step="0.01" min="0.01" max="2" value="0.5" oninput="ChangePlanetPersistance(this.value)"/></div>
+                    <div class="control"><span id="planet-lacunarity-label">Detail:</span><span id="planet-lacunarity-value">1</span><input id="planet-lacunarity" type="range" step="0.01" min="0.01" max="4" step="0.01" value="2" oninput="ChangePlanetLacunarity(this.value)"/></div>
+                    <div class="control"><span id="planet-scale-label">Scale:</span><span id="planet-scale-value">1</span><input id="planet-scale" type="range" step="0.01" min="0.01" max="5" value="1" oninput="ChangePlanetScale(this.value)"/></div>
+                    <div class="control"><span id="planet-redistribution-label">Flatness:</span><span id="planet-redistribution-value">1</span><input id="planet-redistribution" type="range" step="0.01" min="0.1" max="5" value="1" oninput="ChangePlanetRedistribution(this.value)"/></div>
+                    <div class="control"><span id="planet-octaves-label">Layers:</span><span id="planet-octaves-value">1</span><input id="planet-octaves" type="range" step="1" min="1" max="10" value="7" oninput="ChangePlanetOctaves(this.value)"/></div>
+                    <div class="control"><input id="planet-turbulence" name="planet-turbulence" type="checkbox" onchange="ChangePlanetTurbulence(this)"/><label for="planet-turbulence">Turbulence</label></div>
+                    <div class="control"><input id="planet-ridge" name="planet-ridge" type="checkbox" onchange="ChangePlanetRidge(this)"/><label for="planet-ridge">Ridge</label></div>
+                </div>
                 Mountains
                 <div class="control-group">
-                    <div class="control"><span id="mountain-numLayers-label">NumLayers:</span><span id="mountain-numLayers-value">1</span><input id="numLayers" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainNumLayers(this.value)"/></div>
-                    <div class="control"><span id="mountain-blend-label">Blend:</span><span id="mountain-blend-value">1</span><input id="blend" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainBlend(this.value)"/></div>
-                    <div class="control"><span id="mountain-scale-label">Scale:</span><span id="mountain-scale-value">1</span><input id="scale" type="range" step="0.1" min="0" max="10" value="1" oninput="ChangeMountainScale(this.value)"/></div>
-                    <div class="control"><span id="mountain-persistence-label">Persistence:</span><span id="mountain-persistence-value">1</span><input id="persistence" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainPersistence(this.value)"/></div>
-                    <div class="control"><span id="mountain-lacunarity-label">Lacunarity:</span><span id="mountain-lacunarity-value">1</span><input id="lacunarity" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainLacunarity(this.value)"/></div>
-                    <div class="control"><span id="mountain-multiplier-label">Multiplier:</span><span id="mountain-multiplier-value">1</span><input id="multiplier" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainMultiplier(this.value)"/></div>
-                    <div class="control"><span id="mountain-power-label">Power:</span><span id="mountain-power-value">1</span><input id="power" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainPower(this.value)"/></div>
-                    <div class="control"><span id="mountain-gain-label">Gain:</span><span id="mountain-gain-value">1</span><input id="gain" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainGain(this.value)"/></div>
-                    <div class="control"><span id="mountain-offset-label">Offset:</span><span id="mountain-offset-value">1</span><input id="offset" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainOffset(this.value)"/></div>
-                    <div class="control"><span id="mountain-verticalShift-label">VerticalShift:</span><span id="mountain-verticalShift-value">1</span><input id="verticalShift" type="range" step="0.01" min="-1" max="1" value="1" oninput="ChangeMountainVerticalShift(this.value)"/></div>
+                    <div class="control"><div id="ridge-seed-label">Seed:</div><input id="ridge-seed" type="number" min="1" maxlength="9" oninput="ChangeRidgeSeed(this.value)" style="width: 90px"/></div>
+                    <div class="control"><span id="ridge-persistance-label">Smoothness:</span><span id="ridge-numLayers-value">1</span><input id="ridge-persistance" type="range" step="0.01" min="0.01" max="2" value="0.5" oninput="ChangeRidgePersistance(this.value)"/></div>
+                    <div class="control"><span id="ridge-lacunarity-label">Detail:</span><span id="ridge-lacunarity-value">1</span><input id="ridge-lacunarity" type="range" step="0.01" min="0.01" max="4" step="0.01" value="2" oninput="ChangeRidgeLacunarity(this.value)"/></div>
+                    <div class="control"><span id="ridge-scale-label">Scale:</span><span id="ridge-scale-value">1</span><input id="ridge-scale" type="range" step="0.01" min="0.01" max="5" value="1" oninput="ChangeRidgeScale(this.value)"/></div>
+                    <div class="control"><span id="ridge-redistribution-label">Flatness:</span><span id="ridge-redistribution-value">1</span><input id="ridge-redistribution" type="range" step="0.01" min="0.1" max="5" value="1" oninput="ChangeRidgeRedistribution(this.value)"/></div>
+                    <div class="control"><span id="ridge-octaves-label">Layers:</span><span id="ridge-octaves-value">1</span><input id="ridge-octaves" type="range" step="1" min="1" max="10" value="7" oninput="ChangeRidgeOctaves(this.value)"/></div>
+                    <div class="control"><input id="ridge-turbulence" name="ridge-turbulence" type="checkbox" onchange="ChangeRidgeTurbulence(this)"/><label for="ridge-turbulence">Turbulence</label></div>
+                    <div class="control"><input id="ridge-ridge" name="ridge-ridge" type="checkbox" onchange="ChangeRidgeRidge(this)"/><label for="ridge-ridge">Ridge</label></div>
                 </div>
 
                 <div class="control-group">

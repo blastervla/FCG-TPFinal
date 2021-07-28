@@ -171,7 +171,8 @@ var showBox;  // boleano para determinar si se debe o no mostrar la caja
 window.onload = function() 
 {
 	showBox = document.getElementById('show-box');
-	document.getElementById('world-seed').value = seed;
+	document.getElementById('planet-seed').value = miscParams.seed;
+	document.getElementById('ridge-seed').value = ridgeParams.seed;
 	InitWebGL();
 	
 	// Componente para la luz
@@ -246,148 +247,157 @@ function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-var seed = parseInt(getRandomArbitrary(1, 1000000000));
-function ChangeWorldSeed(newSeed) {
-	seed = newSeed;
-	ReloadWorld();
+function ChangePlanetMaskScale(scale) {
+	planetParams.scale = parseFloat(scale);
+	document.getElementById('planet-mask-scale-value').innerText = planetParams.scale;
+	ReloadPlanetParams();
 }
 
-function ChangeContinentNumLayers(numLayers) {
-	continentOpts.numLayers = parseInt(numLayers);
-	document.getElementById('world-numLayers-value').innerText = numLayers;
-	ReloadWorld();
+function ChangePlanetHeight(height) {
+	planetParams.height = parseFloat(height);
+	document.getElementById('planet-height-value').innerText = planetParams.height;
+	ReloadPlanetParams();
 }
 
-function ChangeContinentScale(scale) {
-	continentOpts.scale = parseInt(scale);
-	document.getElementById('world-scale-value').innerText = scale;
-	ReloadWorld();
+function ChangePlanetSeaLevel(seaLevel) {
+	planetParams.seaLevel = parseFloat(seaLevel);
+	document.getElementById('planet-seaLevel-value').innerText = planetParams.seaLevel;
+	ReloadPlanetParams();
 }
 
-function ChangeContinentPersistence(persistence) {
-	continentOpts.persistence = parseInt(persistence);
-	document.getElementById('world-persistence-value').innerText = persistence;
-	ReloadWorld();
+function ChangePlanetNoiseOpacity(noiseOpacity) {
+	planetParams.noiseOpacity = parseFloat(noiseOpacity);
+	document.getElementById('planet-noiseOpacity-value').innerText = planetParams.noiseOpacity;
+	ReloadPlanetParams();
 }
 
-function ChangeContinentLacunarity(lacunarity) {
-	continentOpts.lacunarity = parseInt(lacunarity);
-	document.getElementById('world-lacunarity-value').innerText = lacunarity;
-	ReloadWorld();
+function ChangePlanetSeed(seed) {
+	miscParams.seed = parseFloat(seed);
+	document.getElementById('planet-seed-value').innerText = miscParams.seed;
+	ReloadPlanetParams();
 }
 
-function ChangeContinentMultiplier(multiplier) {
-	continentOpts.multiplier = parseInt(multiplier);
-	document.getElementById('world-multiplier-value').innerText = multiplier;
-	ReloadWorld();
+function ChangePlanetPersistance(persistance) {
+	miscParams.persistance = parseFloat(persistance);
+	document.getElementById('planet-persistance-value').innerText = miscParams.persistance;
+	ReloadPlanetParams();
 }
 
-function ChangeOceanDepth(depth) {
-	oceanOpts.depth = parseInt(depth);
-	document.getElementById('ocean-depth-value').innerText = depth;
-	ReloadWorld();
+function ChangePlanetLacunarity(lacunarity) {
+	miscParams.lacunarity = parseFloat(lacunarity);
+	document.getElementById('planet-lacunarity-value').innerText = miscParams.lacunarity;
+	ReloadPlanetParams();
 }
 
-function ChangeOceanDepthMultiplier(depthMultiplier) {
-	oceanOpts.depthMultiplier = parseInt(depthMultiplier);
-	document.getElementById('ocean-depthMultiplier-value').innerText = depthMultiplier;
-	ReloadWorld();
+function ChangePlanetScale(scale) {
+	miscParams.scale = parseFloat(scale);
+	document.getElementById('planet-scale-value').innerText = miscParams.scale;
+	ReloadPlanetParams();
 }
 
-function ChangeOceanSmoothing(smoothing) {
-	oceanOpts.smoothing = parseInt(smoothing);
-	document.getElementById('ocean-smoothing-value').innerText = smoothing;
-	ReloadWorld();
+function ChangePlanetRedistribution(redistribution) {
+	miscParams.redistribution = parseFloat(redistribution);
+	document.getElementById('planet-redistribution-value').innerText = miscParams.redistribution;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainNumLayers(numLayers) {
-	mountainOpts.numLayers = parseInt(numLayers);
-	document.getElementById('mountain-numLayers-value').innerText = numLayers;
-	ReloadWorld();
+function ChangePlanetOctaves(octaves) {
+	miscParams.octaves = parseInt(octaves);
+	document.getElementById('planet-octaves-value').innerText = miscParams.octaves;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainScale(scale) {
-	mountainOpts.scale = parseInt(scale);
-	document.getElementById('mountain-scale-value').innerText = scale;
-	ReloadWorld();
+function ChangePlanetTurbulence(param) {
+	miscParams.turbulence = param.checked;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainBlend(blend) {
-	mountainOpts.blend = parseInt(blend);
-	document.getElementById('mountain-blend-value').innerText = blend;
-	ReloadWorld();
+function ChangePlanetRidge(param) {
+	miscParams.ridge = param.checked;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainPersistence(persistence) {
-	mountainOpts.persistence = parseInt(persistence);
-	document.getElementById('mountain-persistence-value').innerText = persistence;
-	ReloadWorld();
+function ChangeRidgeSeed(seed) {
+	ridgeParams.seed = parseFloat(seed);
+	document.getElementById('ridge-seed-value').innerText = ridgeParams.seed;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainLacunarity(lacunarity) {
-	mountainOpts.lacunarity = parseInt(lacunarity);
-	document.getElementById('mountain-lacunarity-value').innerText = lacunarity;
-	ReloadWorld();
+function ChangeRidgePersistance(persistance) {
+	ridgeParams.persistance = parseFloat(persistance);
+	document.getElementById('ridge-persistance-value').innerText = ridgeParams.persistance;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainMultiplier(multiplier) {
-	mountainOpts.multiplier = parseInt(multiplier);
-	document.getElementById('mountain-multiplier-value').innerText = multiplier;
-	ReloadWorld();
+function ChangeRidgeLacunarity(lacunarity) {
+	ridgeParams.lacunarity = parseFloat(lacunarity);
+	document.getElementById('ridge-lacunarity-value').innerText = ridgeParams.lacunarity;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainPower(power) {
-	mountainOpts.power = parseInt(power);
-	document.getElementById('mountain-power-value').innerText = power;
-	ReloadWorld();
+function ChangeRidgeScale(scale) {
+	ridgeParams.scale = parseFloat(scale);
+	document.getElementById('ridge-scale-value').innerText = ridgeParams.scale;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainGain(gain) {
-	mountainOpts.gain = parseInt(gain);
-	document.getElementById('mountain-gain-value').innerText = gain;
-	ReloadWorld();
+function ChangeRidgeRedistribution(redistribution) {
+	ridgeParams.redistribution = parseFloat(redistribution);
+	document.getElementById('ridge-redistribution-value').innerText = ridgeParams.redistribution;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainOffset(offset) {
-	mountainOpts.offset = parseInt(offset);
-	document.getElementById('mountain-offset-value').innerText = offset;
-	ReloadWorld();
+function ChangeRidgeOctaves(octaves) {
+	ridgeParams.octaves = parseInt(octaves);
+	document.getElementById('ridge-octaves-value').innerText = ridgeParams.octaves;
+	ReloadPlanetParams();
 }
 
-function ChangeMountainVerticalShift(verticalShift) {
-	mountainOpts.verticalShift = parseInt(verticalShift);
-	document.getElementById('mountain-verticalShift-value').innerText = verticalShift;
-	ReloadWorld();
+function ChangeRidgeTurbulence(param) {
+	ridgeParams.turbulence = param.checked;
+	ReloadPlanetParams();
 }
 
-var continentOpts = {
-	numLayers: 3,
+function ChangeRidgeRidge(param) {
+	ridgeParams.ridge = param.checked;
+	ReloadPlanetParams();
+}
+
+var planetParams = {
+	scale: 0.5,
+	height: 1,
+	seaLevel: 0.25,
+	noiseOpacity: 0.25
+};
+
+var ridgeParams = {
+	seed: parseFloat(getRandomArbitrary(1, 1000000000)),
+	persistance: 0.5,
+	lacunarity: 2,
 	scale: 1,
-	persistence: 1,
-	lacunarity: 1,
-	multiplier: 1,
+	redistribution: 1,
+	octaves: 7,
+	turbulence: true,
+	ridge: true,
 };
 
-var oceanOpts = {
-	depth: 1,
-	depthMultiplier: 1,
-	smoothing: 1
-};
-
-var mountainOpts = {
-	numLayers: 3,
+var miscParams = {
+	seed: parseFloat(getRandomArbitrary(1, 1000000000)),
+	persistance: 0.5,
+	lacunarity: 2,
 	scale: 1,
-	blend: 1,
-	persistence: 1,
-	lacunarity: 1,
-	multiplier: 1,
-	power: 1,
-	gain: 1,
-	offset: 1,
-	verticalShift: 1,
+	redistribution: 1,
+	octaves: 7,
+	turbulence: false,
+	ridge: false,
 };
+
+function ReloadPlanetParams() {
+	meshDrawer.setPlanetParams(planetParams, ridgeParams, miscParams);
+}
+
 function ReloadWorld() {
-	LoadObjFromString(new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts));
+	LoadObjFromString(new SphereCreator().createSphere(size));
 }
 
 // Control de la calesita de rotación
@@ -421,13 +431,6 @@ function AutoRotate( param )
 function ShowTexture( param )
 {
 	meshDrawer.showTexture( param.checked );
-	DrawScene();
-}
-
-// Control de intercambiar y-z
-function SwapYZ( param )
-{
-	meshDrawer.swapYZ( param.checked );
 	DrawScene();
 }
 
