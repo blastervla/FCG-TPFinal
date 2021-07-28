@@ -1,7 +1,6 @@
 precision mediump float;
 
 	uniform sampler2D texGPU;
-	uniform int useTex;
 
 	uniform mat4 mv;
 	uniform mat3 mn;
@@ -9,11 +8,9 @@ precision mediump float;
 	uniform float shininess;
 	uniform float seaLine;
 
-	varying vec2 texCoord;
 	varying vec3 normCoord;
 	varying vec4 vertCoord;
 
-	const vec4 sunLightColor = vec4(1, 0.98, 0.82, 1);
 	const vec4 seaColor = vec4(0.18, 0.53, 0.82, 1);
 	const vec4 earthColor = vec4(0.3, 0.65, 0.25, 1);
 	const vec4 beachColor = vec4(0.89, 0.76, 0.33, 1);
@@ -41,6 +38,7 @@ precision mediump float;
 			Kd = earthColor;
 		} else if (height > seaLine + earthThreshold && height < seaLine + mountainThreshold) {
 			Kd = mountainColor;
+			surfaceShininessFactor = 2.0;
 		} else if (height > seaLine + mountainThreshold) {
 			Kd = mountainTopColor;
 		} else {
@@ -51,7 +49,7 @@ precision mediump float;
 		vec4 Ka = Kd;
 		Ka.x /= 2.0;
 		Ka.y /= 2.0;
-		Ka.z /= 2.0;
+		Ka.z /= 2.0; // Darken color when unlighted
 
 		// if (useTex == 1) {
 			// Kd = texture2D(texGPU, texCoord);

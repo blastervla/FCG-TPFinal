@@ -398,7 +398,8 @@ var mountainOpts = {
 	verticalShift: -1,
 };
 function ReloadWorld() {
-	LoadObjFromString(new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts));
+	LoadObjFromString(new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts), false);
+	LoadObjFromString(new SphereCreator().createSphere(size, null, null, null, null), true);
 }
 
 // Control de la calesita de rotación
@@ -491,7 +492,7 @@ function LoadObj( param )
 	}
 }
 
-function LoadObjFromString(obj) {
+function LoadObjFromString(obj, isAtmosphere) {
 	var mesh = new ObjMesh;
 	mesh.parse( obj );
 	var box = mesh.getBoundingBox();
@@ -509,7 +510,11 @@ function LoadObjFromString(obj) {
 	var scale = 1/maxSize;
 	mesh.shiftAndScale( shift, scale );
 	var buffers = mesh.getVertexBuffers();
-	meshDrawer.setMesh( buffers.positionBuffer, buffers.texCoordBuffer, buffers.normalBuffer );
+	if (!isAtmosphere) {
+		meshDrawer.setMesh( buffers.positionBuffer, buffers.texCoordBuffer, buffers.normalBuffer );
+	} else {
+		meshDrawer.setAtmosphereMesh( buffers.positionBuffer, buffers.texCoordBuffer, buffers.normalBuffer );
+	}
 	DrawScene();
 }
 
