@@ -225,7 +225,7 @@ class ShapeCreator {
         let noiseMachine = new Noise(noiseSeed);
         for (let i = 0; i < this.vertices.length; i++) {
             let continent = noiseMachine.simpleNoise(
-                this.vertices[i], continentOpts.numLayers, continentOpts.scale, 
+                this.vertices[i], continentOpts.numLayers, continentOpts.scale / 1000, 
                 continentOpts.persistence, continentOpts.lacunarity, continentOpts.multiplier
             );
 
@@ -234,17 +234,17 @@ class ShapeCreator {
             continent *= continent < 0 ? 1 + oceanOpts.depthMultiplier : 1;
             continent *= -1;
 
-            let mountainMask = noiseMachine.blend(0, mountainOpts.blend, noiseMachine.simpleNoise(
-                this.vertices[i], mountainOpts.numLayers, mountainOpts.scale, 
-                mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.multiplier
-            ));
-            let mountains = noiseMachine.smoothedRidgidNoise(
-                this.vertices[i], mountainOpts.offset, mountainOpts.numLayers, 
-                mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.scale, 
-                mountainOpts.multiplier, mountainOpts.power, mountainOpts.gain, mountainOpts.verticalShift
-            ) * mountainMask;
+            // let mountainMask = noiseMachine.blend(0, mountainOpts.blend, noiseMachine.simpleNoise(
+            //     this.vertices[i], mountainOpts.numLayers, mountainOpts.scale, 
+            //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.multiplier
+            // ));
+            // let mountains = noiseMachine.smoothedRidgidNoise(
+            //     this.vertices[i], mountainOpts.offset, mountainOpts.numLayers, 
+            //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.scale, 
+            //     mountainOpts.multiplier, mountainOpts.power, mountainOpts.gain, mountainOpts.verticalShift
+            // ) * mountainMask;
 
-            let finalHeight = radius + (continent + mountains) * radius * 0.01;
+            let finalHeight = radius + (continent /*+ mountains*/) * radius * 0.01;
 
             this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], finalHeight);
         }

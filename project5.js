@@ -222,6 +222,8 @@ window.onload = function()
 	
 	SetShininess( document.getElementById('shininess-exp') );
 	
+	ChangeSeaLine(87);
+
 	// Dibujo la escena
 	DrawScene();
 
@@ -235,7 +237,7 @@ function WindowResize()
 	DrawScene();
 }
 
-var size = 10;
+var size = 20;
 function ChangeWorldSize(newSize) {
 	size = parseInt(newSize);
 	document.getElementById('world-size-value').innerText = newSize;
@@ -259,7 +261,7 @@ function ChangeContinentNumLayers(numLayers) {
 }
 
 function ChangeContinentScale(scale) {
-	continentOpts.scale = parseFloat(scale);
+	continentOpts.scale = parseInt(scale);
 	document.getElementById('world-scale-value').innerText = scale;
 	ReloadWorld();
 }
@@ -360,31 +362,38 @@ function ChangeMountainVerticalShift(verticalShift) {
 	ReloadWorld();
 }
 
+function ChangeSeaLine(seaLine) {
+	seaLine = parseFloat(seaLine);
+	document.getElementById('sea-line-value').innerText = seaLine;
+	meshDrawer.setSeaLine(seaLine / 100);
+	DrawScene();
+}
+
 var continentOpts = {
 	numLayers: 3,
-	scale: 1,
-	persistence: 1,
-	lacunarity: 1,
+	scale: 100,
+	persistence: 0.25,
+	lacunarity: 0.25,
 	multiplier: 1,
 };
 
 var oceanOpts = {
-	depth: 1,
-	depthMultiplier: 1,
-	smoothing: 1
+	depth: 5.5,
+	depthMultiplier: 16.5,
+	smoothing: 2
 };
 
 var mountainOpts = {
 	numLayers: 3,
 	scale: 1,
 	blend: 1,
-	persistence: 1,
-	lacunarity: 1,
+	persistence: 0.25,
+	lacunarity: 0.25,
 	multiplier: 1,
 	power: 1,
 	gain: 1,
 	offset: 1,
-	verticalShift: 1,
+	verticalShift: -1,
 };
 function ReloadWorld() {
 	LoadObjFromString(new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts));

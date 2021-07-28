@@ -119,6 +119,7 @@ class MeshDrawer
 		this.shouldSwapYZ = gl.getUniformLocation(this.prog, 'shouldSwapYZ');
 		this.lightDir = gl.getUniformLocation(this.prog, 'lightDir');
 		this.shininess = gl.getUniformLocation(this.prog, 'shininess');
+		this.seaLine = gl.getUniformLocation(this.prog, 'seaLine');
 
 		// 3. Obtenemos los IDs de los atributos de los vértices, texturas y normales en los shaders
 		this.pos = gl.getAttribLocation( this.prog, 'pos' );
@@ -261,5 +262,11 @@ class MeshDrawer
 	{
 		gl.useProgram(this.prog);
 		gl.uniform1f(this.shininess, shininess);
+	}
+
+	setSeaLine( seaLine )
+	{
+		gl.useProgram(this.prog);
+		gl.uniform1f(this.seaLine, seaLine);
 	}
 }
