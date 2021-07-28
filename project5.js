@@ -165,12 +165,12 @@ function MatrixMult( A, B )
 
 // ======== Funciones para el control de la interfaz ========
 
-var showBox;  // boleano para determinar si se debe o no mostrar la caja
+var showBox = {checked: false};  // boleano para determinar si se debe o no mostrar la caja
 
 // Al cargar la página
 window.onload = function() 
 {
-	showBox = document.getElementById('show-box');
+	// showBox = document.getElementById('show-box');
 	document.getElementById('world-seed').value = seed;
 	InitWebGL();
 	
@@ -223,6 +223,8 @@ window.onload = function()
 	SetShininess( document.getElementById('shininess-exp') );
 	
 	ChangeSeaLine(87);
+
+	AutoRotate({checked: true});
 
 	// Dibujo la escena
 	DrawScene();
@@ -401,6 +403,9 @@ function ReloadWorld() {
 
 // Control de la calesita de rotación
 var timer;
+var ROTATION_SPEED = 3;
+var lightRotX = 35;
+var lightRotY = Math.PI;
 function AutoRotate( param )
 {
 	// Si hay que girar...
@@ -409,20 +414,51 @@ function AutoRotate( param )
 		// Vamos rotando una cantiad constante cada 30 ms
 		timer = setInterval( function() 
 		{
-				var v = document.getElementById('rotation-speed').value;
-				autorot += 0.0005 * v;
-				if ( autorot > 2*Math.PI ) autorot -= 2*Math.PI;
+			autorot += 0.0005 * ROTATION_SPEED;
+			autorot %= 2*Math.PI;
 
-				// Reenderizamos
-				DrawScene();
-			}, 30
+			// Reenderizamos
+			DrawScene();
+		}, 30
 		);
-		document.getElementById('rotation-speed').disabled = false;
 	} 
 	else 
 	{
 		clearInterval( timer );
-		document.getElementById('rotation-speed').disabled = true;
+	}
+}
+
+var lightTimer;
+function AutoRotateLight( param )
+{
+	// Si hay que girar...
+	if ( param.checked ) 
+	{
+		// Vamos rotando una cantiad constante cada 30 ms
+		lightTimer = setInterval(function() {
+			lightRotY += 0.0005 * ROTATION_SPEED * 10;
+			lightRotY %= 2*Math.PI;
+			var cy = Math.cos(lightRotY);
+			var sy = Math.sin(lightRotY);
+			var cx = Math.cos(lightRotX);
+			var sx = Math.sin(lightRotX);
+			meshDrawer.setLightDir( -sy, cy*sx, -cy*cx );
+			// Reenderizamos
+			DrawScene();
+		}, 30);
+	} 
+	else 
+	{
+		lightRotY = Math.PI;
+		var cy = Math.cos(lightRotY);
+		var sy = Math.sin(lightRotY);
+		var cx = Math.cos(lightRotX);
+		var sx = Math.sin(lightRotX);
+		meshDrawer.setLightDir( -sy, cy*sx, -cy*cx );
+		// Reenderizamos
+		DrawScene();
+
+		clearInterval( lightTimer );
 	}
 }
 
