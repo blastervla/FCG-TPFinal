@@ -66,6 +66,15 @@
                 <div class="control-group">
                     <div class="control">Atmosfera:<br/><input id="texture" type="file" onchange="LoadTexture(this)" accept="image/*"/></div>
                 </div>
+
+                Import / Export
+                <div class="control-group">
+                    <div class="control">Import from settings<br/><input id="texture" type="file" onchange="LoadPlanet(this)" accept=".plnt"/></div>
+
+                    <div class="control">Export<br>
+                    <button id="export" onclick="ExportPlanetSettings()">Export planet settings</button><br>
+                    <button id="export" onclick="ExportPlanetObj()">Export planet (.obj)</button></div>
+                </div>
 			</div>
             <img hidden id="texture-img" crossorigin="anonymous"/>
 		</div>

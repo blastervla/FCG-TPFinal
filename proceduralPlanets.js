@@ -346,10 +346,11 @@ function ChangeMountainVerticalShift(verticalShift) {
 	ReloadWorld();
 }
 
+var oceanLine;
 function ChangeSeaLine(seaLine) {
-	seaLine = parseFloat(seaLine);
-	document.getElementById('sea-line-value').innerText = seaLine;
-	meshDrawer.setSeaLine(seaLine / 100);
+	oceanLine = parseFloat(seaLine);
+	document.getElementById('sea-line-value').innerText = oceanLine;
+	meshDrawer.setSeaLine(oceanLine / 100);
 	DrawScene();
 }
 
@@ -382,6 +383,29 @@ var mountainOpts = {
 function ReloadWorld() {
 	LoadObjFromString(new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts), false);
 	LoadObjFromString(new SphereCreator().createSphere(size, seed * seed / 1000, Object.assign({}, continentOpts, { multiplier: 0.2 }), oceanOpts, mountainOpts), true);
+}
+
+function UpdateGUI() {
+	document.getElementById('world-size-value').innerText = newSize;
+	document.getElementById('world-numLayers-value').innerText = numLayers;
+	document.getElementById('world-scale-value').innerText = scale;
+	document.getElementById('world-persistence-value').innerText = persistence;
+	document.getElementById('world-lacunarity-value').innerText = lacunarity;
+	document.getElementById('world-multiplier-value').innerText = multiplier;
+	document.getElementById('ocean-depth-value').innerText = depth;
+	document.getElementById('ocean-depthMultiplier-value').innerText = depthMultiplier;
+	document.getElementById('ocean-smoothing-value').innerText = smoothing;
+	document.getElementById('mountain-numLayers-value').innerText = numLayers;
+	document.getElementById('mountain-scale-value').innerText = scale;
+	document.getElementById('mountain-blend-value').innerText = blend;
+	document.getElementById('mountain-persistence-value').innerText = persistence;
+	document.getElementById('mountain-lacunarity-value').innerText = lacunarity;
+	document.getElementById('mountain-multiplier-value').innerText = multiplier;
+	document.getElementById('mountain-power-value').innerText = power;
+	document.getElementById('mountain-gain-value').innerText = gain;
+	document.getElementById('mountain-offset-value').innerText = offset;
+	document.getElementById('mountain-verticalShift-value').innerText = verticalShift;
+	document.getElementById('sea-line-value').innerText = seaLine;
 }
 
 // Control de la calesita de rotación
@@ -514,3 +538,44 @@ function SetAtmosphere(param) {
 	DrawScene();
 }
 
+function LoadPlanet(param) {
+	if (param.files && param.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function (e) {
+			let lines = e.target.result.split("\n");
+
+			size = parseInt(lines[0]);
+			seed = parseInt(lines[1]);
+			let i = 2;
+			for (const obj of [continentOpts, oceanOpts, mountainOpts]) {
+				for (const key in obj) {
+					obj[key] = parseFloat(lines[i]);
+					i++;
+				}
+			}
+			ReloadWorld();
+			ChangeSeaLine(parseInt(lines[i]));
+			DrawScene();
+		};
+		reader.readAsText(param.files[0]);
+	}
+}
+
+function ExportPlanetSettings() {
+	let file = "";
+
+	file += size + "\n";
+	file += seed + "\n";
+	for (const obj of [continentOpts, oceanOpts, mountainOpts]) {
+		for (const key in obj) {
+			file += obj[key] + "\n";
+		}
+	}
+	file += oceanLine + "\n";
+
+	download("myPlanet.plnt", file);
+}
+
+function ExportPlanetObj() {
+	download("myPlanet.obj", new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts));
+}
