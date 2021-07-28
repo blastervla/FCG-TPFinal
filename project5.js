@@ -259,43 +259,43 @@ function ChangeContinentNumLayers(numLayers) {
 }
 
 function ChangeContinentScale(scale) {
-	continentOpts.scale = parseInt(scale);
+	continentOpts.scale = parseFloat(scale);
 	document.getElementById('world-scale-value').innerText = scale;
 	ReloadWorld();
 }
 
 function ChangeContinentPersistence(persistence) {
-	continentOpts.persistence = parseInt(persistence);
+	continentOpts.persistence = parseFloat(persistence);
 	document.getElementById('world-persistence-value').innerText = persistence;
 	ReloadWorld();
 }
 
 function ChangeContinentLacunarity(lacunarity) {
-	continentOpts.lacunarity = parseInt(lacunarity);
+	continentOpts.lacunarity = parseFloat(lacunarity);
 	document.getElementById('world-lacunarity-value').innerText = lacunarity;
 	ReloadWorld();
 }
 
 function ChangeContinentMultiplier(multiplier) {
-	continentOpts.multiplier = parseInt(multiplier);
+	continentOpts.multiplier = parseFloat(multiplier);
 	document.getElementById('world-multiplier-value').innerText = multiplier;
 	ReloadWorld();
 }
 
 function ChangeOceanDepth(depth) {
-	oceanOpts.depth = parseInt(depth);
+	oceanOpts.depth = parseFloat(depth);
 	document.getElementById('ocean-depth-value').innerText = depth;
 	ReloadWorld();
 }
 
 function ChangeOceanDepthMultiplier(depthMultiplier) {
-	oceanOpts.depthMultiplier = parseInt(depthMultiplier);
+	oceanOpts.depthMultiplier = parseFloat(depthMultiplier);
 	document.getElementById('ocean-depthMultiplier-value').innerText = depthMultiplier;
 	ReloadWorld();
 }
 
 function ChangeOceanSmoothing(smoothing) {
-	oceanOpts.smoothing = parseInt(smoothing);
+	oceanOpts.smoothing = parseFloat(smoothing);
 	document.getElementById('ocean-smoothing-value').innerText = smoothing;
 	ReloadWorld();
 }
@@ -307,55 +307,55 @@ function ChangeMountainNumLayers(numLayers) {
 }
 
 function ChangeMountainScale(scale) {
-	mountainOpts.scale = parseInt(scale);
+	mountainOpts.scale = parseFloat(scale);
 	document.getElementById('mountain-scale-value').innerText = scale;
 	ReloadWorld();
 }
 
 function ChangeMountainBlend(blend) {
-	mountainOpts.blend = parseInt(blend);
+	mountainOpts.blend = parseFloat(blend);
 	document.getElementById('mountain-blend-value').innerText = blend;
 	ReloadWorld();
 }
 
 function ChangeMountainPersistence(persistence) {
-	mountainOpts.persistence = parseInt(persistence);
+	mountainOpts.persistence = parseFloat(persistence);
 	document.getElementById('mountain-persistence-value').innerText = persistence;
 	ReloadWorld();
 }
 
 function ChangeMountainLacunarity(lacunarity) {
-	mountainOpts.lacunarity = parseInt(lacunarity);
+	mountainOpts.lacunarity = parseFloat(lacunarity);
 	document.getElementById('mountain-lacunarity-value').innerText = lacunarity;
 	ReloadWorld();
 }
 
 function ChangeMountainMultiplier(multiplier) {
-	mountainOpts.multiplier = parseInt(multiplier);
+	mountainOpts.multiplier = parseFloat(multiplier);
 	document.getElementById('mountain-multiplier-value').innerText = multiplier;
 	ReloadWorld();
 }
 
 function ChangeMountainPower(power) {
-	mountainOpts.power = parseInt(power);
+	mountainOpts.power = parseFloat(power);
 	document.getElementById('mountain-power-value').innerText = power;
 	ReloadWorld();
 }
 
 function ChangeMountainGain(gain) {
-	mountainOpts.gain = parseInt(gain);
+	mountainOpts.gain = parseFloat(gain);
 	document.getElementById('mountain-gain-value').innerText = gain;
 	ReloadWorld();
 }
 
 function ChangeMountainOffset(offset) {
-	mountainOpts.offset = parseInt(offset);
+	mountainOpts.offset = parseFloat(offset);
 	document.getElementById('mountain-offset-value').innerText = offset;
 	ReloadWorld();
 }
 
 function ChangeMountainVerticalShift(verticalShift) {
-	mountainOpts.verticalShift = parseInt(verticalShift);
+	mountainOpts.verticalShift = parseFloat(verticalShift);
 	document.getElementById('mountain-verticalShift-value').innerText = verticalShift;
 	ReloadWorld();
 }
