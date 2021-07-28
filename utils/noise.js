@@ -173,10 +173,9 @@ class Noise {
         return a * h + b * (1 - h) - k * h * (1 - h);
     }
 
-    smoothstep(a, b, x)
-    {
-        let t = this.saturate((x - a)/(b - a));
-        return t*t*(3.0 - (2.0*t));
+    smoothstep(a, b, x) {
+        let t = this.saturate((x - a) / (b - a));
+        return t * t * (3.0 - (2.0 * t));
     }
 
     blend(startHeight, blendDst, height) {
@@ -217,15 +216,15 @@ class Noise {
         let axisB = sphereNormal.cross(axisA);
 
         let offsetDst = offset * 0.01;
-        let sample0 = this.ridgidNoise(pos, offset, numLayers, persistence, 
+        let sample0 = this.ridgidNoise(pos, offset, numLayers, persistence,
             lacunarity, scale, multiplier, power, gain, verticalShift);
-        let sample1 = this.ridgidNoise(pos.minus(axisA).times(offsetDst), offset, numLayers, persistence, 
+        let sample1 = this.ridgidNoise(pos.minus(axisA).times(offsetDst), offset, numLayers, persistence,
             lacunarity, scale, multiplier, power, gain, verticalShift);
-        let sample2 = this.ridgidNoise(pos.plus(axisA).times(offsetDst), offset, numLayers, persistence, 
+        let sample2 = this.ridgidNoise(pos.plus(axisA).times(offsetDst), offset, numLayers, persistence,
             lacunarity, scale, multiplier, power, gain, verticalShift);
-        let sample3 = this.ridgidNoise(pos.minus(axisB).times(offsetDst), offset, numLayers, persistence, 
+        let sample3 = this.ridgidNoise(pos.minus(axisB).times(offsetDst), offset, numLayers, persistence,
             lacunarity, scale, multiplier, power, gain, verticalShift);
-        let sample4 = this.ridgidNoise(pos.plus(axisB).times(offsetDst), offset, numLayers, persistence, 
+        let sample4 = this.ridgidNoise(pos.plus(axisB).times(offsetDst), offset, numLayers, persistence,
             lacunarity, scale, multiplier, power, gain, verticalShift);
         return (sample0 + sample1 + sample2 + sample3 + sample4) / 5;
     }

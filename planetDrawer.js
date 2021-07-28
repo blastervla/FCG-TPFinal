@@ -47,7 +47,7 @@ class MeshDrawer {
 
 		let meshVS = loadFile("./shaders/vertexShader.glsl");
 		let meshFS = loadFile("./shaders/fragmentShader.glsl");
-		
+
 		let atmosphereVS = loadFile("./shaders/atmosphere/vertexShader.glsl");
 		let atmosphereFS = loadFile("./shaders/atmosphere/fragmentShader.glsl");
 

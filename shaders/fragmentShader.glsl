@@ -1,57 +1,56 @@
 precision mediump float;
 
-	uniform mat4 mv;
-	uniform mat3 mn;
-	uniform vec3 lightDir;
-	uniform float shininess;
-	uniform float seaLine;
+uniform mat4 mv;
+uniform mat3 mn;
+uniform vec3 lightDir;
+uniform float shininess;
+uniform float seaLine;
 
-	varying vec3 normCoord;
-	varying vec4 vertCoord;
+varying vec3 normCoord;
+varying vec4 vertCoord;
 
-	const vec4 seaColor = vec4(0.18, 0.53, 0.82, 1);
-	const vec4 earthColor = vec4(0.3, 0.65, 0.25, 1);
-	const vec4 beachColor = vec4(0.89, 0.76, 0.33, 1);
-	const vec4 mountainColor = vec4(0.7, 0.85, 0.88, 1);
-	const vec4 mountainTopColor = vec4(0.7, 0.85, 0.88, 1);
+const vec4 seaColor = vec4(0.18, 0.53, 0.82, 1);
+const vec4 earthColor = vec4(0.3, 0.65, 0.25, 1);
+const vec4 beachColor = vec4(0.89, 0.76, 0.33, 1);
+const vec4 mountainColor = vec4(0.7, 0.85, 0.88, 1);
+const vec4 mountainTopColor = vec4(0.7, 0.85, 0.88, 1);
 
-	const float beachThreshold = 0.005;
-	const float earthThreshold = 0.1;
-	const float mountainThreshold = 0.15;
+const float beachThreshold = 0.005;
+const float earthThreshold = 0.1;
+const float mountainThreshold = 0.15;
 
-	void main()
-	{
-		vec4 I = vec4(1.0, 1.0, 1.0, 1.0);
-		vec4 Ks = I;
-		vec4 Ia = vec4(0.2, 0.2, 0.2, 0.2);
+void main() {
+	vec4 I = vec4(1.0, 1.0, 1.0, 1.0);
+	vec4 Ks = I;
+	vec4 Ia = vec4(0.2, 0.2, 0.2, 0.2);
 
-		vec4 Kd;
-		
-		float height = distance(vec4(0,0,0,1), vertCoord);
-		float surfaceShininessFactor = 100000.0;
-		if (height > seaLine && height < seaLine + beachThreshold) {
-			Kd = beachColor;
-		} else if (height > seaLine + beachThreshold && height < seaLine + earthThreshold) {
-			Kd = earthColor;
-		} else if (height > seaLine + earthThreshold && height < seaLine + mountainThreshold) {
-			Kd = mountainColor;
-			surfaceShininessFactor = 2.0;
-		} else if (height > seaLine + mountainThreshold) {
-			Kd = mountainTopColor;
-		} else {
-			Kd = seaColor;
-			surfaceShininessFactor = 1.0;
-		}
+	vec4 Kd;
 
-		vec4 Ka = Kd;
-		Ka.x /= 2.0;
-		Ka.y /= 2.0;
-		Ka.z /= 2.0; // Darken color when unlighted
-
-		vec3 n = mn * normCoord;
-		float cosTheta = dot(n, lightDir);
-		vec4 v = -(mv * vertCoord);
-		vec4 h = normalize(vec4(lightDir, 1) + v);
-		float cosOmega = dot(vec4(n, 1), h);
-		gl_FragColor = I * max(0.0, cosTheta) * (Kd + Ks * pow(max(0.0, cosOmega), shininess * surfaceShininessFactor) / cosTheta) + Ia * Ka;
+	float height = distance(vec4(0, 0, 0, 1), vertCoord);
+	float surfaceShininessFactor = 100000.0;
+	if(height > seaLine && height < seaLine + beachThreshold) {
+		Kd = beachColor;
+	} else if(height > seaLine + beachThreshold && height < seaLine + earthThreshold) {
+		Kd = earthColor;
+	} else if(height > seaLine + earthThreshold && height < seaLine + mountainThreshold) {
+		Kd = mountainColor;
+		surfaceShininessFactor = 2.0;
+	} else if(height > seaLine + mountainThreshold) {
+		Kd = mountainTopColor;
+	} else {
+		Kd = seaColor;
+		surfaceShininessFactor = 1.0;
 	}
+
+	vec4 Ka = Kd;
+	Ka.x /= 2.0;
+	Ka.y /= 2.0;
+	Ka.z /= 2.0; // Darken color when unlighted
+
+	vec3 n = mn * normCoord;
+	float cosTheta = dot(n, lightDir);
+	vec4 v = -(mv * vertCoord);
+	vec4 h = normalize(vec4(lightDir, 1) + v);
+	float cosOmega = dot(vec4(n, 1), h);
+	gl_FragColor = I * max(0.0, cosTheta) * (Kd + Ks * pow(max(0.0, cosOmega), shininess * surfaceShininessFactor) / cosTheta) + Ia * Ka;
+}

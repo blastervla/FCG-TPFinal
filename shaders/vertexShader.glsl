@@ -6,11 +6,10 @@ uniform mat4 mvp;
 varying vec3 normCoord;
 varying vec4 vertCoord;
 
-void main()
-{ 
+void main() {
     vec3 drawPos = pos;
-    
-    gl_Position = mvp * vec4(drawPos,1);
+
+    gl_Position = mvp * vec4(drawPos, 1);
     normCoord = normal;
     vertCoord = vec4(pos, 1);
 }
