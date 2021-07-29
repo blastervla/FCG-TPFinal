@@ -1,156 +1,202 @@
-class Grad {
+class vec3 {
     constructor(x, y, z) {
         this.x = x; this.y = y; this.z = z;
     }
 
-    dot3(x, y, z) {
-        return this.x * x + this.y * y + this.z * z;
+    plus(other) {
+        return new vec3(this.x + other.x, this.y + other.y, this.z + other.z);
+    }
+
+    minus(other) {
+        return new vec3(this.x - other.x, this.y - other.y, this.z - other.z, this.w - other.w);
+    }
+
+    scalarPlus(n) {
+        return new vec3(this.x + n, this.y + n, this.z + n);
+    }
+
+    times(scalar) {
+        return new vec3(this.x * scalar, this.y * scalar, this.z * scalar);
+    }
+
+    product(other) {
+        return new vec3(this.x * other.x, this.y * other.y, this.z * other.z);
+    }
+
+    dot(other) {
+        return this.x * other.x + this.y * other.y + this.z * other.z;
+    }
+
+    floor() {
+        return new vec3(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z));
+    }
+
+    step(other) {
+        return new vec3(other.x < this.x ? 0.0 : 1.0, other.y < this.y ? 0.0 : 1.0, other.z < this.z ? 0.0 : 1.0);
+    }
+
+    min(other) {
+        return new vec3(Math.min(this.x, other.x), Math.min(this.y, other.y), Math.min(this.z, other.z));
+    }
+
+    max(other) {
+        return new vec3(Math.max(this.x, other.x), Math.max(this.y, other.y), Math.max(this.z, other.z));
     }
 }
 
+class vec4 {
+    constructor(x, y, z, w) {
+        this.x = x; this.y = y; this.z = z; this.w = w;
+    }
+
+    plus(other) {
+        return new vec4(this.x + other.x, this.y + other.y, this.z + other.z, this.w + other.w);
+    }
+
+    minus(other) {
+        return new vec4(this.x - other.x, this.y - other.y, this.z - other.z, this.w - other.w);
+    }
+
+    scalarPlus(n) {
+        return new vec4(this.x + n, this.y + n, this.z + n, this.w + n);
+    }
+
+    scalarMinus(n) {
+        return new vec4(this.x - n, this.y - n, this.z - n, this.w - n);
+    }
+
+    dot(other) {
+        return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;
+    }
+
+    times(scalar) {
+        return new vec4(this.x * scalar, this.y * scalar, this.z * scalar, this.w * scalar);
+    }
+    
+    product(other) {
+        return new vec4(this.x * other.x, this.y * other.y, this.z * other.z, this.w * other.w);
+    }
+
+    floor() {
+        return new vec4(Math.floor(this.x), Math.floor(this.y), Math.floor(this.z), Math.floor(this.w));
+    }
+
+    abs() {
+        return new vec4(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z), Math.abs(this.w));
+    }
+
+    step(other) {
+        return new vec4(other.x < this.x ? 0.0 : 1.0, other.y < this.y ? 0.0 : 1.0, 
+                        other.z < this.z ? 0.0 : 1.0, other.w < this.w ? 0.0 : 1.0);
+    }
+
+    max(other) {
+        return new vec4(Math.max(this.x, other.x), Math.max(this.y, other.y),
+                        Math.max(this.z, other.z), Math.max(this.w, other.w));
+    }
+}
+
+function _permute(v) { 
+    return new vec4(
+        (((v.x * 34.0) + 1.0) * v.x) % 289,
+        (((v.y * 34.0) + 1.0) * v.y) % 289,
+        (((v.z * 34.0) + 1.0) * v.z) % 289,
+        (((v.w * 34.0) + 1.0) * v.w) % 289,
+    )
+    return mod(((x * 34.0) + 1.0) * x, 289.0); 
+}
+function _taylorInvSqrt(r) { 
+    return new vec4(
+        1.79284291400159 - 0.85373472095314 * r.x, 
+        1.79284291400159 - 0.85373472095314 * r.y, 
+        1.79284291400159 - 0.85373472095314 * r.z, 
+        1.79284291400159 - 0.85373472095314 * r.w,
+    ); 
+}
+
 class Simplex {
-    constructor(seed) {
-        this.F3 = 1 / 3;
-        this.G3 = 1 / 6;
-        this.perm = new Array(512);
-        this.gradP = new Array(512);
-        this.p = [151, 160, 137, 91, 90, 15,
-            131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23,
-            190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33,
-            88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166,
-            77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244,
-            102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169, 200, 196,
-            135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64, 52, 217, 226, 250, 124, 123,
-            5, 202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42,
-            223, 183, 170, 213, 119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9,
-            129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178, 185, 112, 104, 218, 246, 97, 228,
-            251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107,
-            49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254,
-            138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
-        ];
-        this.grad3 = [
-            new Grad(1, 1, 0), new Grad(-1, 1, 0), new Grad(1, -1, 0), new Grad(-1, -1, 0),
-            new Grad(1, 0, 1), new Grad(-1, 0, 1), new Grad(1, 0, -1), new Grad(-1, 0, -1),
-            new Grad(0, 1, 1), new Grad(0, -1, 1), new Grad(0, 1, -1), new Grad(0, -1, -1)
-        ];
-        this.seed(seed);
+    constructor() {}
+
+    noise(v) {
+        let C = [1.0 / 6.0, 1.0 / 3.0];
+        let D = new vec4(0.0, 0.5, 1.0, 2.0);
+
+        // First corner
+        let i = v.scalarPlus(v.dot(new vec3(C[1], C[1], C[1]))).floor();
+        let x0 = v.minus(i).scalarPlus(i.dot(new vec3(C[0], C[0], C[0])));
+
+        // Other corners
+        let g = new vec3(x0.y, x0.z, x0.x).step(x0);
+        let l = new vec3(1.0, 1.0, 1.0).minus(g);
+        let i1 = g.min(new vec3(l.z, l.x, l.y));
+        let i2 = g.max(new vec3(l.z, l.x, l.y));
+
+    //  x0 = x0 - 0. + 0.0 * C
+        let x1 = x0.minus(i1).plus(new vec3(C[0], C[0], C[0]));
+        let x2 = x0.minus(i2).plus(new vec3(2 * C[0], 2 * C[0], 2 * C[0]));
+        let x3 = x0.minus(new vec3(1, 1, 1)).plus(new vec3(3 * C[0], 3 * C[0], 3 * C[0]));
+
+    // Permutations
+        i = new vec3(i.x % 289, i.y % 289, i.z % 289);
+        let p = _permute(
+            _permute(
+                _permute(
+                    new vec4(i.z, i1.z + i.z, i2.z + i.z, 1.0 + i.z)
+                )
+                .scalarPlus(i.y)
+                .plus(new vec4(0.0, i1.y, i2.y, 1.0))
+            ).scalarPlus(i.x).plus(new vec4(0.0, i1.x, i2.x, 1.0))
+        );
+
+    // Gradients
+    // ( N*N points uniformly over a square, mapped onto an octahedron.)
+        let n_ = 1.0 / 7.0; // N=7
+        let ns = new vec3(n_ * D.w, n_ * D.y, n_ * D.z).minus(new vec3(D.x, D.z, D.x));
+
+        let j = p.minus(new vec4(49, 49, 49, 49).product(p.times(ns.z).times(ns.z).floor())); //  mod(p,N*N)
+
+        let x_ = j.times(ns.z).floor();
+        let y_ = j.minus(x_.times(7.0)).floor(); // mod(j,N)
+
+        let x = new vec4(ns.y, ns.y, ns.y, ns.y).plus(x_.times(ns.x));
+        let y = new vec4(ns.y, ns.y, ns.y, ns.y).plus(y_.times(ns.x));
+        let aux = x.abs().minus(y.abs());
+        let h = new vec4(1, 1, 1, 1).minus(x.abs()).minus(y.abs());
+
+        let b0 = new vec4(x.x, x.y, y.x, y.y);
+        let b1 = new vec4(x.z, x.w, y.z, y.w);
+
+        let s0 = b0.floor().times(2.0).scalarPlus(1.0);
+        let s1 = b1.floor().times(2.0).scalarPlus(1.0);
+        let sh = h.step(new vec4(0,0,0,0)).times(-1);
+
+        let a0 = new vec4(b0.x, b0.z, b0.y, b0.w).plus(new vec4(s0.x, s0.z, s0.y, s0.w).product(new vec4(sh.x, sh.x, sh.y, sh.y)));
+        let a1 = new vec4(b1.x, b1.z, b1.y, b1.w).plus(new vec4(s1.x, s1.z, s1.y, s1.w).product(new vec4(sh.z, sh.z, sh.w, sh.w)));
+
+        let p0 = new vec3(a0.x, a0.y, h.x);
+        let p1 = new vec3(a0.z, a0.w, h.y);
+        let p2 = new vec3(a1.x, a1.y, h.z);
+        let p3 = new vec3(a1.z, a1.w, h.w);
+
+    // Normalise gradients
+        let norm = _taylorInvSqrt(new vec4(p0.dot(p0), p1.dot(p1), p2.dot(p2), p3.dot(p3)));
+        p0 = p0.times(norm.x);
+        p1 = p1.times(norm.y);
+        p2 = p2.times(norm.z);
+        p3 = p3.times(norm.w);
+
+    // Mix final noise value
+        let m = new vec4(0.6, 0.6, 0.6, 0.6).minus(new vec4(x0.dot(x0), x1.dot(x1), x2.dot(x2), x3.dot(x3))).max(new vec4(0, 0, 0, 0));
+        m = m.product(m);
+        return 42.0 *
+            m.product(m).dot(new vec4(p0.dot(x0), p1.dot(x1), p2.dot(x2), p3.dot(x3)));
     }
-
-    seed(seed) {
-        if (seed > 0 && seed < 1) {
-            // Scale the seed out
-            seed *= 65536;
-        }
-
-        seed = Math.floor(seed);
-        if (seed < 256) {
-            seed |= seed << 8;
-        }
-
-        for (var i = 0; i < 256; i++) {
-            var v;
-            if (i & 1) {
-                v = this.p[i] ^ (seed & 255);
-            } else {
-                v = this.p[i] ^ ((seed >> 8) & 255);
-            }
-
-            this.perm[i] = this.perm[i + 256] = v;
-            this.gradP[i] = this.gradP[i + 256] = this.grad3[v % 12];
-        }
-    }
-
-    noise(xin, yin, zin) {
-        var n0, n1, n2, n3; // Noise contributions from the four corners
-
-        // Skew the input space to determine which simplex cell we're in
-        var s = (xin + yin + zin) * this.F3; // Hairy factor for 2D
-        var i = Math.floor(xin + s);
-        var j = Math.floor(yin + s);
-        var k = Math.floor(zin + s);
-
-        var t = (i + j + k) * this.G3;
-        var x0 = xin - i + t; // The x,y distances from the cell origin, unskewed.
-        var y0 = yin - j + t;
-        var z0 = zin - k + t;
-
-        // For the 3D case, the simplex shape is a slightly irregular tetrahedron.
-        // Determine which simplex we are in.
-        var i1, j1, k1; // Offsets for second corner of simplex in (i,j,k) coords
-        var i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords
-        if (x0 >= y0) {
-            if (y0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 1; k2 = 0; }
-            else if (x0 >= z0) { i1 = 1; j1 = 0; k1 = 0; i2 = 1; j2 = 0; k2 = 1; }
-            else { i1 = 0; j1 = 0; k1 = 1; i2 = 1; j2 = 0; k2 = 1; }
-        } else {
-            if (y0 < z0) { i1 = 0; j1 = 0; k1 = 1; i2 = 0; j2 = 1; k2 = 1; }
-            else if (x0 < z0) { i1 = 0; j1 = 1; k1 = 0; i2 = 0; j2 = 1; k2 = 1; }
-            else { i1 = 0; j1 = 1; k1 = 0; i2 = 1; j2 = 1; k2 = 0; }
-        }
-        // A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z),
-        // a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and
-        // a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where
-        // c = 1/6.
-        var x1 = x0 - i1 + this.G3; // Offsets for second corner
-        var y1 = y0 - j1 + this.G3;
-        var z1 = z0 - k1 + this.G3;
-
-        var x2 = x0 - i2 + 2 * this.G3; // Offsets for third corner
-        var y2 = y0 - j2 + 2 * this.G3;
-        var z2 = z0 - k2 + 2 * this.G3;
-
-        var x3 = x0 - 1 + 3 * this.G3; // Offsets for fourth corner
-        var y3 = y0 - 1 + 3 * this.G3;
-        var z3 = z0 - 1 + 3 * this.G3;
-
-        // Work out the hashed gradient indices of the four simplex corners
-        i &= 255;
-        j &= 255;
-        k &= 255;
-        var gi0 = this.gradP[i + this.perm[j + this.perm[k]]];
-        var gi1 = this.gradP[i + i1 + this.perm[j + j1 + this.perm[k + k1]]];
-        var gi2 = this.gradP[i + i2 + this.perm[j + j2 + this.perm[k + k2]]];
-        var gi3 = this.gradP[i + 1 + this.perm[j + 1 + this.perm[k + 1]]];
-
-        // Calculate the contribution from the four corners
-        var t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;
-        if (t0 < 0) {
-            n0 = 0;
-        } else {
-            t0 *= t0;
-            n0 = t0 * t0 * gi0.dot3(x0, y0, z0);  // (x,y) of this.grad3 used for 2D gradient
-        }
-        var t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1;
-        if (t1 < 0) {
-            n1 = 0;
-        } else {
-            t1 *= t1;
-            n1 = t1 * t1 * gi1.dot3(x1, y1, z1);
-        }
-        var t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2;
-        if (t2 < 0) {
-            n2 = 0;
-        } else {
-            t2 *= t2;
-            n2 = t2 * t2 * gi2.dot3(x2, y2, z2);
-        }
-        var t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3;
-        if (t3 < 0) {
-            n3 = 0;
-        } else {
-            t3 *= t3;
-            n3 = t3 * t3 * gi3.dot3(x3, y3, z3);
-        }
-        // Add contributions from each corner to get the final noise value.
-        // The result is scaled to return values in the interval [-1,1].
-        return 32 * (n0 + n1 + n2 + n3);
-    };
 }
 
 class Noise {
     constructor(seed) {
         this.seed = seed;
-        this.s = new Simplex(this.seed);
+        this.s = new Simplex();
     }
 
     simpleNoise(pos, numLayers, scale, persistence, lacunarity, multiplier) {
@@ -158,7 +204,7 @@ class Noise {
         let amplitude = 1;
         let frequency = scale;
         for (let i = 0; i < numLayers; i++) {
-            noiseSum += this.s.noise(pos.x * frequency, pos.y * frequency, pos.z * frequency) * amplitude;
+            noiseSum += this.s.noise(new vec3(pos.x + this.seed * frequency, pos.y + this.seed * frequency, pos.z + this.seed * frequency)) * amplitude;
             amplitude *= persistence;
             frequency *= lacunarity;
         }

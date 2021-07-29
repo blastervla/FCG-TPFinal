@@ -10,9 +10,10 @@ var rotX = 0, rotY = 0, transZ = 3, autorot = 0, atmosphereAutorot = 0;
 function InitWebGL() {
 	// Inicializamos el canvas WebGL
 	canvas = document.getElementById("canvas");
-	canvas.oncontextmenu = function () { return false; };
-	gl = canvas.getContext("webgl", { antialias: false, depth: true });
-	if (!gl) {
+	canvas.oncontextmenu = function() {return false;};
+	gl = canvas.getContext("webgl2", {antialias: false, depth: true});	
+	if (!gl) 
+	{
 		alert("Imposible inicializar WebGL. Tu navegador quizás no lo soporte.");
 		return;
 	}
@@ -192,16 +193,17 @@ window.onload = function () {
 	canvas.onmouseup = canvas.onmouseleave = function () {
 		canvas.onmousemove = null;
 	}
-
-	SetShininess(document.getElementById('shininess-exp'));
-
-	ChangeSeaLine(87);
+	
+	SetShininess( document.getElementById('shininess-exp') );
+	
+	ChangeSeaLine(85);
 
 	AutoRotate({ checked: true });
 
 	// Dibujo la escena
 	DrawScene();
 
+	RecreateWorld();
 	ReloadWorld();
 
 	LoadAtmosphere();
@@ -225,7 +227,7 @@ var size = 20;
 function ChangeWorldSize(newSize) {
 	size = parseInt(newSize);
 	document.getElementById('world-size-value').innerText = newSize;
-	ReloadWorld();
+	RecreateWorld();
 }
 
 function getRandomArbitrary(min, max) {
@@ -257,7 +259,7 @@ function ChangeContinentPersistence(persistence) {
 }
 
 function ChangeContinentLacunarity(lacunarity) {
-	continentOpts.lacunarity = parseFloat(lacunarity);
+	continentOpts.lacunarity = parseFloat(lacunarity) * 0.6 / 100;
 	document.getElementById('world-lacunarity-value').innerText = lacunarity;
 	ReloadWorld();
 }
@@ -351,15 +353,16 @@ function ChangeSeaLine(seaLine) {
 	oceanLine = parseFloat(seaLine);
 	document.getElementById('sea-line-value').innerText = oceanLine;
 	meshDrawer.setSeaLine(oceanLine / 100);
+	ReloadWorld();
 	DrawScene();
 }
 
 var continentOpts = {
-	numLayers: 3,
-	scale: 100,
-	persistence: 0.25,
-	lacunarity: 0.25,
-	multiplier: 1,
+	numLayers: 7,
+	scale: 400,
+	persistence: 1,
+	lacunarity: 0.3,
+	multiplier: 0.5,
 };
 
 var oceanOpts = {
@@ -380,9 +383,14 @@ var mountainOpts = {
 	offset: 1,
 	verticalShift: -1,
 };
+
+function RecreateWorld() {
+	LoadObjFromString(new SphereCreator().createSphere(size, null), false);
+	LoadObjFromString(new SphereCreator().createSphere(size, null), true);
+}
+
 function ReloadWorld() {
-	LoadObjFromString(new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts), false);
-	LoadObjFromString(new SphereCreator().createSphere(size, seed * seed / 1000, Object.assign({}, continentOpts, { multiplier: 0.2 }), oceanOpts, mountainOpts), true);
+	meshDrawer.setParams(size, seed, continentOpts, oceanOpts);
 }
 
 function UpdateGUI() {

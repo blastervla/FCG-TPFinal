@@ -34,16 +34,16 @@
                 Continent
                 <div class="control-group">
 					<div class="control"><span id="world-size-label">World Size:</span><span id="world-size-value">10</span><input id="world-size" type="range" min="1" max="50" value="10" oninput="ChangeWorldSize(this.value)"/></div>
-                    <div class="control"><div id="world-seed-label">Seed:</div><input id="world-seed" type="number" min="1" maxlength="9" oninput="ChangeWorldSeed(this.value)" style="width: 90px"/></div>
-                    <div class="control"><span id="world-numLayers-label">Layer number:</span><span id="world-numLayers-value">3</span><input id="numLayers" type="range" min="1" max="10" value="3" oninput="ChangeContinentNumLayers(this.value)"/></div>
-                    <div class="control"><span id="world-scale-label">Continent probability:</span><span id="world-scale-value">100</span><input id="scale" type="range" step="1" min="0" max="1000" value="100" oninput="ChangeContinentScale(this.value)"/></div>
-                    <div class="control"><span id="world-persistence-label">Smoothness:</span><span id="world-persistence-value">0.25</span><input id="persistence" type="range" step="0.01" min="0.01" max="2" value="0.25" oninput="ChangeContinentPersistence(this.value)"/></div>
-                    <div class="control"><span id="world-lacunarity-label">Detail:</span><span id="world-lacunarity-value">0.25</span><input id="lacunarity" type="range" min="0.1" max="4" step="0.01" value="0.25" oninput="ChangeContinentLacunarity(this.value)"/></div>
-                    <div class="control"><span id="world-multiplier-label">Land height:</span><span id="world-multiplier-value">1</span><input id="multiplier" type="range" min="0.01" max="2" step="0.01" value="1" oninput="ChangeContinentMultiplier(this.value)"/></div>
+                    <div class="control"><div id="world-seed-label">Seed:</div><input id="world-seed" type="number" step="100" min="1" maxlength="9" oninput="ChangeWorldSeed(this.value)" style="width: 90px"/></div>
+                    <div class="control"><span id="world-numLayers-label">Layer number:</span><span id="world-numLayers-value">7</span><input id="numLayers" type="range" min="1" max="10" value="7" oninput="ChangeContinentNumLayers(this.value)"/></div>
+                    <div class="control"><span id="world-scale-label">Continent probability:</span><span id="world-scale-value">400</span><input id="scale" type="range" step="1" min="0" max="1000" value="400" oninput="ChangeContinentScale(this.value)"/></div>
+                    <div class="control"><span id="world-persistence-label">Tectonic failures:</span><span id="world-persistence-value">1</span><input id="persistence" type="range" step="0.01" min="0.01" max="2" value="1" oninput="ChangeContinentPersistence(this.value)"/></div>
+                    <div class="control"><span id="world-lacunarity-label">Detail:</span><span id="world-lacunarity-value">50</span><input id="lacunarity" type="range" min="1" max="100" step="1" value="50" oninput="ChangeContinentLacunarity(this.value)"/></div>
+                    <div class="control"><span id="world-multiplier-label">Flatlands heights:</span><span id="world-multiplier-value">0.5</span><input id="multiplier" type="range" min="0.01" max="2" step="0.01" value="0.5" oninput="ChangeContinentMultiplier(this.value)"/></div>
                 </div>
                 Ocean
                 <div class="control-group">
-                    <div class="control"><span id="sea-line-label">Sea line:</span><span id="sea-line-value">88</span><input id="sea-line" type="range" step="1" min="0" max="100" value="88" oninput="ChangeSeaLine(this.value)"/></div>
+                    <div class="control"><span id="sea-line-label">Sea line:</span><span id="sea-line-value">85</span><input id="sea-line" type="range" step="1" min="0" max="100" value="85" oninput="ChangeSeaLine(this.value)"/></div>
                     <div class="control"><span id="ocean-depth-label">Depth:</span><span id="ocean-depth-value">5.5</span><input id="ocean-depth" type="range" step="0.01" min="0" max="20" value="5.5" oninput="ChangeOceanDepth(this.value)"/></div>
                     <div class="control"><span id="ocean-depthMultiplier-label">DepthMultiplier:</span><span id="ocean-depthMultiplier-value">16.5</span><input id="ocean-depthMultiplier" type="range" step="0.05" min="0" max="20" value="16.5" oninput="ChangeOceanDepthMultiplier(this.value)"/></div>
                     <div class="control"><span id="ocean-smoothing-label">Smoothing:</span><span id="ocean-smoothing-value">2</span><input id="ocean-smoothing" type="range" step=0.05 min="0" max="10" value="2" oninput="ChangeOceanSmoothing(this.value)"/></div>

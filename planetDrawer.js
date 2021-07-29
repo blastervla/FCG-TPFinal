@@ -45,9 +45,12 @@ class MeshDrawer {
 		this.show = true;
 		this.shouldShowAtmosphere = true;
 
-		let meshVS = loadFile("./shaders/vertexShader.glsl");
-		let meshFS = loadFile("./shaders/fragmentShader.glsl");
-
+		let version = "#version 300 es\n";
+		let libs = "\n" + loadFile("./shaders/commonNoise.glsl") 
+				 + "\n" + loadFile("./shaders/simplexNoise.glsl");
+		let meshVS = version + libs + loadFile("./shaders/vertexShader.glsl");
+		
+		let meshFS = version + loadFile("./shaders/fragmentShader.glsl");
 		let atmosphereVS = loadFile("./shaders/atmosphere/vertexShader.glsl");
 		let atmosphereFS = loadFile("./shaders/atmosphere/fragmentShader.glsl");
 
@@ -62,6 +65,15 @@ class MeshDrawer {
 		this.lightDir = gl.getUniformLocation(this.prog, 'lightDir');
 		this.shininess = gl.getUniformLocation(this.prog, 'shininess');
 		this.seaLine = gl.getUniformLocation(this.prog, 'seaLine');
+		this.seed = gl.getUniformLocation(this.prog, 'seed');
+		this.layerNumber = gl.getUniformLocation(this.prog, 'layerNumber');
+		this.scale = gl.getUniformLocation(this.prog, 'scale');
+		this.persistence = gl.getUniformLocation(this.prog, 'persistence');
+		this.lacunarity = gl.getUniformLocation(this.prog, 'lacunarity');
+		this.multiplier = gl.getUniformLocation(this.prog, 'multiplier');
+		this.depth = gl.getUniformLocation(this.prog, 'depth');
+		this.depthMultiplier = gl.getUniformLocation(this.prog, 'depthMultiplier');
+		this.oceanSmoothing = gl.getUniformLocation(this.prog, 'oceanSmoothing');
 
 		this.atmMvp = gl.getUniformLocation(this.atmosphereProg, 'mvp');
 		this.atmMv = gl.getUniformLocation(this.atmosphereProg, 'mv');
@@ -245,10 +257,24 @@ class MeshDrawer {
 
 	setSeaLine(seaLine) {
 		gl.useProgram(this.prog);
-		gl.uniform1f(this.seaLine, seaLine);
+		gl.uniform1f(this.seaLine, seaLine + 0.2);
 	}
 
 	setAtmosphere(shouldShow) {
 		this.shouldShowAtmosphere = shouldShow;
+	}
+
+	setParams(size, seed, continentOpts, oceanOpts) {
+		gl.useProgram(this.prog);
+
+		gl.uniform1i(this.seed, parseInt(seed));
+		gl.uniform1i(this.layerNumber, parseInt(continentOpts.numLayers));
+		gl.uniform1f(this.scale, continentOpts.scale);
+		gl.uniform1f(this.persistence, continentOpts.persistence);
+		gl.uniform1f(this.lacunarity, continentOpts.lacunarity);
+		gl.uniform1f(this.multiplier, continentOpts.multiplier);
+		gl.uniform1f(this.depth, oceanOpts.depth);
+		gl.uniform1f(this.depthMultiplier, oceanOpts.depthMultiplier);
+		gl.uniform1f(this.oceanSmoothing, oceanOpts.smoothing);
 	}
 }
