@@ -103,11 +103,12 @@ class MeshDrawer
 		// inicializaciones
 		this.show = true;
 
+		let version = "#version 300 es\n";
 		let libs = "\n" + loadFile("./shaders/commonNoise.glsl") 
-				 + "\n" + loadFile("./shaders/perlinNoise.glsl");
-		let meshVS = libs + loadFile("./shaders/vertexShader.glsl");
+				 + "\n" + loadFile("./shaders/simplexNoise.glsl");
+		let meshVS = version + libs + loadFile("./shaders/vertexShader.glsl");
 		
-		let meshFS = loadFile("./shaders/fragmentShader.glsl");
+		let meshFS = version + loadFile("./shaders/fragmentShader.glsl");
 		let atmosphereVS = loadFile("./shaders/atmosphere/vertexShader.glsl");
 		let atmosphereFS = loadFile("./shaders/atmosphere/fragmentShader.glsl");
 
@@ -122,6 +123,15 @@ class MeshDrawer
 		this.lightDir = gl.getUniformLocation(this.prog, 'lightDir');
 		this.shininess = gl.getUniformLocation(this.prog, 'shininess');
 		this.seaLine = gl.getUniformLocation(this.prog, 'seaLine');
+		this.seed = gl.getUniformLocation(this.prog, 'seed');
+		this.layerNumber = gl.getUniformLocation(this.prog, 'layerNumber');
+		this.scale = gl.getUniformLocation(this.prog, 'scale');
+		this.persistence = gl.getUniformLocation(this.prog, 'persistence');
+		this.lacunarity = gl.getUniformLocation(this.prog, 'lacunarity');
+		this.multiplier = gl.getUniformLocation(this.prog, 'multiplier');
+		this.depth = gl.getUniformLocation(this.prog, 'depth');
+		this.depthMultiplier = gl.getUniformLocation(this.prog, 'depthMultiplier');
+		this.oceanSmoothing = gl.getUniformLocation(this.prog, 'oceanSmoothing');
 
 		this.atmMvp = gl.getUniformLocation( this.atmosphereProg, 'mvp' );
 		this.atmMv = gl.getUniformLocation( this.atmosphereProg, 'mv' );
@@ -203,32 +213,32 @@ class MeshDrawer
 	// normales (matrixNormal) que es la inversa transpuesta de matrixMV
 	draw( matrixMVP, matrixMV, matrixNormal )
 	{
-		// 1. Seleccionamos el shader
-		gl.useProgram(this.atmosphereProg);
+		// // 1. Seleccionamos el shader
+		// gl.useProgram(this.atmosphereProg);
 	
-		// 2. Setear uniformes con las matrices de transformaciones
-		gl.uniformMatrix4fv(this.atmMv, false, matrixMV);
-		gl.uniformMatrix4fv(this.atmMvp, false, matrixMVP);
-		gl.uniformMatrix3fv(this.atmMn, false, matrixNormal);
+		// // 2. Setear uniformes con las matrices de transformaciones
+		// gl.uniformMatrix4fv(this.atmMv, false, matrixMV);
+		// gl.uniformMatrix4fv(this.atmMvp, false, matrixMVP);
+		// gl.uniformMatrix3fv(this.atmMn, false, matrixNormal);
 		
-	    // 3. Habilitar atributos: vértices, normales, texturas
-		// Vértices
-		gl.bindBuffer( gl.ARRAY_BUFFER, this.atmPositionBuffer );
+	    // // 3. Habilitar atributos: vértices, normales, texturas
+		// // Vértices
+		// gl.bindBuffer( gl.ARRAY_BUFFER, this.atmPositionBuffer );
 		
-		// Habilitamos el atributo 
-		gl.vertexAttribPointer( this.atmPos, 3, gl.FLOAT, false, 0, 0 );
-		gl.enableVertexAttribArray( this.atmPos );
+		// // Habilitamos el atributo 
+		// gl.vertexAttribPointer( this.atmPos, 3, gl.FLOAT, false, 0, 0 );
+		// gl.enableVertexAttribArray( this.atmPos );
 
-		// Normales
-		gl.bindBuffer( gl.ARRAY_BUFFER, this.atmNormalsBuffer );
+		// // Normales
+		// gl.bindBuffer( gl.ARRAY_BUFFER, this.atmNormalsBuffer );
 		
-		// Habilitamos el atributo 
-		gl.vertexAttribPointer( this.atmNormals, 3, gl.FLOAT, false, 0, 0 );
-		gl.enableVertexAttribArray( this.atmNormals );
+		// // Habilitamos el atributo 
+		// gl.vertexAttribPointer( this.atmNormals, 3, gl.FLOAT, false, 0, 0 );
+		// gl.enableVertexAttribArray( this.atmNormals );
 		
-		// ...
-		// Dibujamos
-		gl.drawArrays( gl.TRIANGLES, 0, this.atmNumTriangles * 3);
+		// // ...
+		// // Dibujamos
+		// gl.drawArrays( gl.TRIANGLES, 0, this.atmNumTriangles * 3);
 
 		gl.enable(gl.DEPTH_TEST);
 		
@@ -254,7 +264,7 @@ class MeshDrawer
 		// Habilitamos el atributo 
 		gl.vertexAttribPointer( this.normals, 3, gl.FLOAT, false, 0, 0 );
 		gl.enableVertexAttribArray( this.normals );
-		
+
 		// ...
 		// Dibujamos
 		gl.drawArrays( gl.TRIANGLES, 0, this.numTriangles * 3);
@@ -315,6 +325,20 @@ class MeshDrawer
 	setSeaLine( seaLine )
 	{
 		gl.useProgram(this.prog);
-		gl.uniform1f(this.seaLine, seaLine);
+		gl.uniform1f(this.seaLine, seaLine + 0.2);
+	}
+
+	setParams(size, seed, continentOpts, oceanOpts) {
+		gl.useProgram(this.prog);
+
+		gl.uniform1i(this.seed, parseInt(seed));
+		gl.uniform1i(this.layerNumber, parseInt(continentOpts.numLayers));
+		gl.uniform1f(this.scale, continentOpts.scale);
+		gl.uniform1f(this.persistence, continentOpts.persistence);
+		gl.uniform1f(this.lacunarity, continentOpts.lacunarity);
+		gl.uniform1f(this.multiplier, continentOpts.multiplier);
+		gl.uniform1f(this.depth, oceanOpts.depth);
+		gl.uniform1f(this.depthMultiplier, oceanOpts.depthMultiplier);
+		gl.uniform1f(this.oceanSmoothing, oceanOpts.smoothing);
 	}
 }
