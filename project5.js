@@ -400,8 +400,8 @@ var mountainOpts = {
 };
 
 function RecreateWorld() {
-	LoadObjFromString(new SphereCreator().createSphere(size, seed, continentOpts, oceanOpts, mountainOpts), false);
-	LoadObjFromString(new SphereCreator().createSphere(size, seed * seed / 1000, Object.assign({}, continentOpts, {multiplier: 0.2}), oceanOpts, mountainOpts), true);
+	LoadObjFromString(new SphereCreator().createSphere(size, null), false);
+	LoadObjFromString(new SphereCreator().createSphere(size, null), true);
 }
 
 function ReloadWorld() {

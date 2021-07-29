@@ -213,32 +213,32 @@ class MeshDrawer
 	// normales (matrixNormal) que es la inversa transpuesta de matrixMV
 	draw( matrixMVP, matrixMV, matrixNormal )
 	{
-		// // 1. Seleccionamos el shader
-		// gl.useProgram(this.atmosphereProg);
+		// 1. Seleccionamos el shader
+		gl.useProgram(this.atmosphereProg);
 	
-		// // 2. Setear uniformes con las matrices de transformaciones
-		// gl.uniformMatrix4fv(this.atmMv, false, matrixMV);
-		// gl.uniformMatrix4fv(this.atmMvp, false, matrixMVP);
-		// gl.uniformMatrix3fv(this.atmMn, false, matrixNormal);
+		// 2. Setear uniformes con las matrices de transformaciones
+		gl.uniformMatrix4fv(this.atmMv, false, matrixMV);
+		gl.uniformMatrix4fv(this.atmMvp, false, matrixMVP);
+		gl.uniformMatrix3fv(this.atmMn, false, matrixNormal);
 		
-	    // // 3. Habilitar atributos: vértices, normales, texturas
-		// // Vértices
-		// gl.bindBuffer( gl.ARRAY_BUFFER, this.atmPositionBuffer );
+	    // 3. Habilitar atributos: vértices, normales, texturas
+		// Vértices
+		gl.bindBuffer( gl.ARRAY_BUFFER, this.atmPositionBuffer );
 		
-		// // Habilitamos el atributo 
-		// gl.vertexAttribPointer( this.atmPos, 3, gl.FLOAT, false, 0, 0 );
-		// gl.enableVertexAttribArray( this.atmPos );
+		// Habilitamos el atributo 
+		gl.vertexAttribPointer( this.atmPos, 3, gl.FLOAT, false, 0, 0 );
+		gl.enableVertexAttribArray( this.atmPos );
 
-		// // Normales
-		// gl.bindBuffer( gl.ARRAY_BUFFER, this.atmNormalsBuffer );
+		// Normales
+		gl.bindBuffer( gl.ARRAY_BUFFER, this.atmNormalsBuffer );
 		
-		// // Habilitamos el atributo 
-		// gl.vertexAttribPointer( this.atmNormals, 3, gl.FLOAT, false, 0, 0 );
-		// gl.enableVertexAttribArray( this.atmNormals );
+		// Habilitamos el atributo 
+		gl.vertexAttribPointer( this.atmNormals, 3, gl.FLOAT, false, 0, 0 );
+		gl.enableVertexAttribArray( this.atmNormals );
 		
-		// // ...
-		// // Dibujamos
-		// gl.drawArrays( gl.TRIANGLES, 0, this.atmNumTriangles * 3);
+		// ...
+		// Dibujamos
+		gl.drawArrays( gl.TRIANGLES, 0, this.atmNumTriangles * 3);
 
 		gl.enable(gl.DEPTH_TEST);
 		
