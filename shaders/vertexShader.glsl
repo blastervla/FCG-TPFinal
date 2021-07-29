@@ -14,9 +14,11 @@ uniform float depth;
 uniform float depthMultiplier;
 uniform float oceanSmoothing;
 
-out vec2 texCoord;
+out vec4 texCoord;
 out vec3 normCoord;
 out vec4 vertCoord;
+
+const float atmosphereHeight = 1.25;
 
 vec3 normalizeWithRespectTo(vec3 a, vec3 b, float length) {
     // get the distance between a and b along the x and y axes
@@ -85,7 +87,7 @@ void main()
     vec3 drawPos = spherizeWithNoise(pos);
     
     gl_Position = mvp * vec4(drawPos,1);
-    texCoord = textureCoordinates;
+    texCoord = mvp * vec4(normalizeWithRespectTo(vec3(0.0, 0.0, 0.0), pos, atmosphereHeight), 1);
     normCoord = calcNormal(drawPos);
     vertCoord = vec4(drawPos, 1);
 }
