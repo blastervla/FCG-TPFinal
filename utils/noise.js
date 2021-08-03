@@ -199,10 +199,9 @@ class Noise {
         this.s = new Simplex();
     }
 
-    simpleNoise(pos, numLayers, scale, persistence, lacunarity, multiplier) {
+    simpleNoise(pos, numLayers, frequency, persistence, lacunarity, multiplier) {
         let noiseSum = 0;
         let amplitude = 1;
-        let frequency = scale;
         for (let i = 0; i < numLayers; i++) {
             noiseSum += this.s.noise(new vec3(pos.x + this.seed * frequency, pos.y + this.seed * frequency, pos.z + this.seed * frequency)) * amplitude;
             amplitude *= persistence;
