@@ -21,13 +21,13 @@ out vec4 vertCoord;
 const float atmosphereHeight = 1.25;
 
 vec3 normalizeWithRespectTo(vec3 a, vec3 b, float length) {
-    // get the distance between a and b along the x and y axes
+    // Consigo la distancia entre a y b en torno a los ejes x e y
     float dx = b.x - a.x;
     float dy = b.y - a.y;
     float dz = b.z - a.z;
     
-    // right now, sqrt(dx^2 + dy^2) = distance(a,b).
-    // we want to modify them so that sqrt(dx^2 + dy^2) = the given length.
+    // sqrt(dx^2 + dy^2) = distance(a,b).
+    // Queremos modificar los di de manera que sqrt(dx^2 + dy^2) = length.
     dx = dx * length / distance(a,b);
     dy = dy * length / distance(a,b);
     dz = dz * length / distance(a,b);
