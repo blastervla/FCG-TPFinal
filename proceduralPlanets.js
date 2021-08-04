@@ -541,7 +541,7 @@ function LoadAtmosphere() {
 		meshDrawer.setTexture(img);
 		DrawScene();
 	}
-	img.src = "https://blastervla.github.io/FCG-TPFinal/textures/clouds.jpg";
+	img.src = "./textures/clouds.jpg";
 }
 
 
