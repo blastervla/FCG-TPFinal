@@ -110,7 +110,7 @@ class Triangle {
 }
 
 class ShapeCreator {
-    constructor() { 
+    constructor() {
         this.vertices = [];
         this.idForVertex = {};
         this.triangles = [];
@@ -175,7 +175,7 @@ class ShapeCreator {
         let AC = A.subdividedSegmentWith(C, degree);
         let AB = A.subdividedSegmentWith(B, degree);
         let BC = B.subdividedSegmentWith(C, degree);
-        
+
         for (let i = 1; i < AB.length - 1; i++) { // We exclude first and last since they are A and B
             if (!this.idForVertex[AB[i]]) {
                 this.addRawVertex(AB[i]);
@@ -198,11 +198,11 @@ class ShapeCreator {
 
             while (currentTopIndex < currentTopSegment.length) {
                 let v1 = this.idForVertex[currentBottomSegment[currentBottomIndex]];
-                
+
                 // We don't re-add top level since we already have it (it's a single vertex, C)
                 // and we only add just after advancing the currentTopIndex
                 if (currentBottomIndex === currentTopIndex && level + 1 !== degree
-                        && !this.idForVertex[currentTopSegment[currentTopIndex]]) {
+                    && !this.idForVertex[currentTopSegment[currentTopIndex]]) {
                     this.addRawVertex(currentTopSegment[currentTopIndex]);
                 }
                 let v2 = this.idForVertex[currentTopSegment[currentTopIndex]];
@@ -224,29 +224,33 @@ class ShapeCreator {
 
         let noiseMachine = new Noise(noiseSeed);
         for (let i = 0; i < this.vertices.length; i++) {
-            let continent = noiseMachine.simpleNoise(
-                this.vertices[i], continentOpts.numLayers, continentOpts.scale, 
-                continentOpts.persistence, continentOpts.lacunarity, continentOpts.multiplier
-            );
+            if (!!noiseSeed) {
+                let continent = noiseMachine.simpleNoise(
+                    this.vertices[i], continentOpts.numLayers, continentOpts.scale / 1000,
+                    continentOpts.persistence, continentOpts.lacunarity, continentOpts.multiplier
+                );
 
-            let ocean = -oceanOpts.depth + continent * 0.15;
-            continent = noiseMachine.smoothMax(continent, ocean, oceanOpts.smoothing);
-            continent *= continent < 0 ? 1 + oceanOpts.depthMultiplier : 1;
-            continent *= -1;
+                let ocean = -oceanOpts.depth + continent * 0.15;
+                continent = noiseMachine.smoothMax(continent, ocean, oceanOpts.smoothing);
+                continent *= continent < 0 ? 1 + oceanOpts.depthMultiplier : 1;
+                continent *= -1;
 
-            let mountainMask = noiseMachine.blend(0, mountainOpts.blend, noiseMachine.simpleNoise(
-                this.vertices[i], mountainOpts.numLayers, mountainOpts.scale, 
-                mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.multiplier
-            ));
-            let mountains = noiseMachine.smoothedRidgidNoise(
-                this.vertices[i], mountainOpts.offset, mountainOpts.numLayers, 
-                mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.scale, 
-                mountainOpts.multiplier, mountainOpts.power, mountainOpts.gain, mountainOpts.verticalShift
-            ) * mountainMask;
+                // let mountainMask = noiseMachine.blend(0, mountainOpts.blend, noiseMachine.simpleNoise(
+                //     this.vertices[i], mountainOpts.numLayers, mountainOpts.scale, 
+                //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.multiplier
+                // ));
+                // let mountains = noiseMachine.smoothedRidgidNoise(
+                //     this.vertices[i], mountainOpts.offset, mountainOpts.numLayers, 
+                //     mountainOpts.persistence, mountainOpts.lacunarity, mountainOpts.scale, 
+                //     mountainOpts.multiplier, mountainOpts.power, mountainOpts.gain, mountainOpts.verticalShift
+                // ) * mountainMask;
 
-            let finalHeight = radius + (continent + mountains) * radius * 0.01;
+                let finalHeight = radius + (continent /*+ mountains*/) * radius * 0.01;
 
-            this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], finalHeight);
+                this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], finalHeight);
+            } else {
+                this.vertices[i] = center.normalizeWithRespectTo(this.vertices[i], radius);
+            }
         }
     }
 }
@@ -259,23 +263,15 @@ class SphereCreator {
 
         // We create a unitarian octahedron
         let vids = [
-            creator.addVertex(size,  0,  0),
-            creator.addVertex(0,  size,  0),
-            creator.addVertex(0,  0,  size),
-            creator.addVertex(-size,  0,  0),
-            creator.addVertex(0, -size,  0),
-            creator.addVertex(0,  0, -size),
+            creator.addVertex(size, 0, 0),
+            creator.addVertex(0, size, 0),
+            creator.addVertex(0, 0, size),
+            creator.addVertex(-size, 0, 0),
+            creator.addVertex(0, -size, 0),
+            creator.addVertex(0, 0, -size),
         ];
 
         let tids = [
-            // creator.addTriangle(vids[1], vids[2], vids[0]),
-            // creator.addTriangle(vids[1], vids[0], vids[5]),
-            // creator.addTriangle(vids[0], vids[2], vids[4]),
-            // creator.addTriangle(vids[0], vids[4], vids[5]),
-            // creator.addTriangle(vids[4], vids[3], vids[5]),
-            // creator.addTriangle(vids[2], vids[3], vids[4]),
-            // creator.addTriangle(vids[1], vids[5], vids[3]),
-            // creator.addTriangle(vids[1], vids[3], vids[2]),
             creator.addTriangle(vids[0], vids[1], vids[2]),
             creator.addTriangle(vids[1], vids[3], vids[2]),
             creator.addTriangle(vids[3], vids[4], vids[2]),
@@ -313,7 +309,7 @@ class SphereCreator {
             normals.push(vNormal.normalized());
         }
 
-        let obj = "vt 0 0\n" // TODO: Soportar texturas quizás? O sacar por completo, ver bien.
+        let obj = "vt 0 0\n"
         for (let v of creator.vertices) {
             obj += `v ${v}\n`
         }
@@ -328,7 +324,7 @@ class SphereCreator {
         for (let t of creator.triangles.filter(t => !!t)) {
             obj += `f ${t}\n`
         }
-        
+
         return obj
     }
 }

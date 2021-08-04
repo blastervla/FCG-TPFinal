@@ -1,17 +1,17 @@
 <doctype html>
 <html>
 <head>
-<title> FCG 2021 - TP5</title>
+<title> FCG 2021 - TP Final</title>
 
 <!-- estilo-->
 <link href="style.css" rel="stylesheet">
 
-<script type="text/javascript" id="includedscript" src="boxdrawer.js"></script>
+<!-- <script type="text/javascript" id="includedscript" src="boxdrawer.js"></script> -->
 <script type="text/javascript" id="includedscript" src="lightview.js"></script>
-<script type="text/javascript" id="includedscript" src="project5.js"></script>
+<script type="text/javascript" id="includedscript" src="proceduralPlanets.js"></script>
 <script type="text/javascript" id="includedscript" src="./utils/noise.js"></script>
 <script type="text/javascript" id="includedscript" src="./utils/helpers.js"></script>
-<script type="text/javascript" id="includedscript" src="ejercicio.js"></script>
+<script type="text/javascript" id="includedscript" src="planetDrawer.js"></script>
 <script type="text/javascript" id="includedscript" src="sphere.js"></script>
 <script type="text/javascript" src="objmesh.js"></script>
 
@@ -22,51 +22,61 @@
 		<div id="controls-div">
 			<!-- menu y controles-->
 			<div id="controls">
-                <div class="control-group"><canvas id="lightcontrol"></canvas><div id="lightcontrol-label">Dirección de la Luz</div></div>
+                <div hidden class="control-group"><canvas id="lightcontrol"></canvas><div id="lightcontrol-label">Dirección de la Luz</div></div>
                 General
                 <div class="control-group">
-                    <div class="control"><input id="show-box" name="show-box" type="checkbox" onchange="DrawScene()" checked /><label for="show-box"> Mostrar caja</label></div>
-                    <div class="control"><input id="show-texture" name="show-texture" type="checkbox" onchange="ShowTexture(this)" checked /><label for="show-texture"> Mostrar textura</label></div>
-                    <div class="control"><input id="auto-rotate" name="auto-rotate" type="checkbox" onchange="AutoRotate(this)"/><label for="auto-rotate"> Calesita</label></div>
-                    <div class="control"><input id="rotation-speed" type="range" min="1" max="100" value="50" disabled/></div>
-                    <div class="control"><span id="shininess-label">Intensidad:</span><span id="shininess-value">1</span><input id="shininess-exp" type="range" min="0" max="100" value="50" oninput="SetShininess(this)"/></div>
+                    <!-- <div class="control"><input id="show-box" name="show-box" type="checkbox" onchange="DrawScene()" checked /><label for="show-box"> Mostrar caja</label></div> -->
+                    <div class="control"><input id="atmosphere" name="atmosphere" type="checkbox" checked onchange="SetAtmosphere(this)"/><label for="atmosphere"> Atmósfera</label></div>
+                    <div class="control"><input id="auto-rotate" name="auto-rotate" type="checkbox" checked onchange="AutoRotate(this)"/><label for="auto-rotate"> Rotación</label></div>
+                    <div class="control"><input id="auto-rotate-light" name="auto-rotate-light" type="checkbox" onchange="AutoRotateLight(this)"/><label for="auto-rotate-light"> Ciclo solar</label></div>
+                    <div class="control"><span id="shininess-label">Distancia solar:</span><span id="shininess-value">1</span><input id="shininess-exp" type="range" min="0" max="100" value="50" oninput="SetShininess(this)"/></div>
                 </div>
                 Continent
                 <div class="control-group">
-					<div class="control"><span id="world-size-label">World Size:</span><span id="world-size-value">10</span><input id="world-size" type="range" min="1" max="50" value="10" oninput="ChangeWorldSize(this.value)"/></div>
-                    <div class="control"><div id="world-seed-label">Seed:</div><input id="world-seed" type="number" min="1" maxlength="9" oninput="ChangeWorldSeed(this.value)" style="width: 90px"/></div>
-                    <div class="control"><span id="world-numLayers-label">NumLayers:</span><span id="world-numLayers-value">1</span><input id="numLayers" type="range" min="1" max="10" value="1" oninput="ChangeContinentNumLayers(this.value)"/></div>
-                    <div class="control"><span id="world-scale-label">Scale:</span><span id="world-scale-value">1</span><input id="scale" type="range" step="0.1" min="0" max="10" value="1" oninput="ChangeContinentScale(this.value)"/></div>
-                    <div class="control"><span id="world-persistence-label">Persistence:</span><span id="world-persistence-value">1</span><input id="persistence" type="range" min="1" max="50" value="1" oninput="ChangeContinentPersistence(this.value)"/></div>
-                    <div class="control"><span id="world-lacunarity-label">Lacunarity:</span><span id="world-lacunarity-value">1</span><input id="lacunarity" type="range" min="1" max="50" value="1" oninput="ChangeContinentLacunarity(this.value)"/></div>
-                    <div class="control"><span id="world-multiplier-label">Multiplier:</span><span id="world-multiplier-value">1</span><input id="multiplier" type="range" min="1" max="50" value="1" oninput="ChangeContinentMultiplier(this.value)"/></div>
+					<div class="control"><span id="world-size-label">World Size:</span><span id="world-size-value">20</span><input id="world-size" type="range" min="1" max="50" value="20" oninput="ChangeWorldSize(this.value)"/></div>
+                    <div class="control"><div id="world-seed-label">Seed:</div><input id="world-seed" type="number" step="100" min="1" maxlength="9" oninput="ChangeWorldSeed(this.value)" style="width: 90px"/></div>
+                    <div class="control"><span id="world-numLayers-label">Layer number:</span><span id="world-numLayers-value">7</span><input id="numLayers" type="range" min="1" max="10" value="7" oninput="ChangeContinentNumLayers(this.value)"/></div>
+                    <div class="control"><span id="world-scale-label">Continent probability:</span><span id="world-scale-value">400</span><input id="scale" type="range" step="1" min="0" max="1000" value="400" oninput="ChangeContinentScale(this.value)"/></div>
+                    <div class="control"><span id="world-persistence-label">Tectonic failures:</span><span id="world-persistence-value">1</span><input id="persistence" type="range" step="0.01" min="0.01" max="2" value="1" oninput="ChangeContinentPersistence(this.value)"/></div>
+                    <div class="control"><span id="world-lacunarity-label">Detail:</span><span id="world-lacunarity-value">50</span><input id="lacunarity" type="range" min="1" max="100" step="1" value="50" oninput="ChangeContinentLacunarity(this.value)"/></div>
+                    <div class="control"><span id="world-multiplier-label">Flatlands heights:</span><span id="world-multiplier-value">0.5</span><input id="multiplier" type="range" min="0.01" max="2" step="0.01" value="0.5" oninput="ChangeContinentMultiplier(this.value)"/></div>
                 </div>
                 Ocean
                 <div class="control-group">
-                    <div class="control"><span id="ocean-depth-label">Depth:</span><span id="ocean-depth-value">10</span><input id="ocean-depth" type="range" step="0.05" min="0" max="20" value="10" oninput="ChangeOceanDepth(this.value)"/></div>
-                    <div class="control"><span id="ocean-depthMultiplier-label">DepthMultiplier:</span><span id="ocean-depthMultiplier-value">10</span><input id="ocean-depthMultiplier" type="range" step="0.05" min="0" max="20" value="10" oninput="ChangeOceanDepthMultiplier(this.value)"/></div>
-                    <div class="control"><span id="ocean-smoothing-label">Smoothing:</span><span id="ocean-smoothing-value">1</span><input id="ocean-smoothing" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeOceanSmoothing(this.value)"/></div>
+                    <div class="control"><span id="sea-line-label">Sea line:</span><span id="sea-line-value">85</span><input id="sea-line" type="range" step="1" min="0" max="100" value="85" oninput="ChangeSeaLine(this.value)"/></div>
+                    <div class="control"><span id="ocean-depth-label">Depth:</span><span id="ocean-depth-value">5.5</span><input id="ocean-depth" type="range" step="0.01" min="0" max="20" value="5.5" oninput="ChangeOceanDepth(this.value)"/></div>
+                    <div class="control"><span id="ocean-depthMultiplier-label">DepthMultiplier:</span><span id="ocean-depthMultiplier-value">16.5</span><input id="ocean-depthMultiplier" type="range" step="0.05" min="0" max="20" value="16.5" oninput="ChangeOceanDepthMultiplier(this.value)"/></div>
+                    <div class="control"><span id="ocean-smoothing-label">Smoothing:</span><span id="ocean-smoothing-value">2</span><input id="ocean-smoothing" type="range" step=0.05 min="0" max="10" value="2" oninput="ChangeOceanSmoothing(this.value)"/></div>
                 </div>
 
-                Mountains
+                <!-- Mountains
                 <div class="control-group">
-                    <div class="control"><span id="mountain-numLayers-label">NumLayers:</span><span id="mountain-numLayers-value">1</span><input id="numLayers" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainNumLayers(this.value)"/></div>
-                    <div class="control"><span id="mountain-blend-label">Blend:</span><span id="mountain-blend-value">1</span><input id="blend" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainBlend(this.value)"/></div>
-                    <div class="control"><span id="mountain-scale-label">Scale:</span><span id="mountain-scale-value">1</span><input id="scale" type="range" step="0.1" min="0" max="10" value="1" oninput="ChangeMountainScale(this.value)"/></div>
-                    <div class="control"><span id="mountain-persistence-label">Persistence:</span><span id="mountain-persistence-value">1</span><input id="persistence" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainPersistence(this.value)"/></div>
-                    <div class="control"><span id="mountain-lacunarity-label">Lacunarity:</span><span id="mountain-lacunarity-value">1</span><input id="lacunarity" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainLacunarity(this.value)"/></div>
-                    <div class="control"><span id="mountain-multiplier-label">Multiplier:</span><span id="mountain-multiplier-value">1</span><input id="multiplier" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainMultiplier(this.value)"/></div>
+                    <div class="control"><span id="mountain-numLayers-label">Layer number:</span><span id="mountain-numLayers-value">3</span><input id="numLayers" type="range" step=1 min="0" max="10" value="3" oninput="ChangeMountainNumLayers(this.value)"/></div>
+                    <div class="control"><span id="mountain-blend-label">Blend:</span><span id="mountain-blend-value">1</span><input id="blend" type="range" step=0.05 min="0.01" max="10" value="1" oninput="ChangeMountainBlend(this.value)"/></div>
+                    <div class="control"><span id="mountain-scale-label">Scale:</span><span id="mountain-scale-value">1</span><input id="scale" type="range" step="0.01" min="0.01" max="5" value="1" oninput="ChangeMountainScale(this.value)"/></div>
+                <div class="control"><span id="mountain-persistence-label">Smoothness:</span><span id="mountain-persistence-value">0.25</span><input id="persistence" type="range" step="0.01" min="0.01" max="2" value="0.25" oninput="ChangeMountainPersistence(this.value)"/></div>
+                    <div class="control"><span id="mountain-lacunarity-label">Detail:</span><span id="mountain-lacunarity-value">0.25</span><input id="lacunarity" type="range" min="0.1" max="4" step="0.01" value="0.25" oninput="ChangeMountainLacunarity(this.value)"/></div>
+                    <div class="control"><span id="mountain-multiplier-label">Multiplier:</span><span id="mountain-multiplier-value">1</span><input id="multiplier" type="range" min="0.01" max="2" step="0.01" value="1" oninput="ChangeMountainMultiplier(this.value)"/></div>
                     <div class="control"><span id="mountain-power-label">Power:</span><span id="mountain-power-value">1</span><input id="power" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainPower(this.value)"/></div>
                     <div class="control"><span id="mountain-gain-label">Gain:</span><span id="mountain-gain-value">1</span><input id="gain" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainGain(this.value)"/></div>
                     <div class="control"><span id="mountain-offset-label">Offset:</span><span id="mountain-offset-value">1</span><input id="offset" type="range" step=0.05 min="0" max="10" value="1" oninput="ChangeMountainOffset(this.value)"/></div>
-                    <div class="control"><span id="mountain-verticalShift-label">VerticalShift:</span><span id="mountain-verticalShift-value">1</span><input id="verticalShift" type="range" step="0.01" min="-1" max="1" value="1" oninput="ChangeMountainVerticalShift(this.value)"/></div>
-                </div>
+                    <div class="control"><span id="mountain-verticalShift-label">VerticalShift:</span><span id="mountain-verticalShift-value">-1</span><input id="verticalShift" type="range" step="0.01" min="-5" max="5" value="0" oninput="ChangeMountainVerticalShift(this.value)"/></div>
+                </div> -->
 
                 <div class="control-group">
-                    <div class="control">Modelo:<br/><input id="obj" type="file" onchange="LoadObj(this)" accept=".obj"/></div>
-                    <div class="control">Textura:<br/><input id="texture" type="file" onchange="LoadTexture(this)" accept="image/*"/></div>
+                    <div class="control">Atmosfera:<br/><input id="texture" type="file" onchange="LoadTexture(this)" accept="image/*"/></div>
+                </div>
+
+                Import / Export
+                <div class="control-group">
+                    <div class="control">Import from settings<br/><input id="texture" type="file" onchange="LoadPlanet(this)" accept=".plnt"/></div>
+
+                    <div class="control">Export<br>
+                    <button id="export" onclick="ExportPlanetSettings()">Export planet settings</button><br>
+                    <button id="export" onclick="ExportPlanetObj()">Export planet (.obj)</button></div>
                 </div>
 			</div>
+            <img hidden id="texture-img" crossorigin="anonymous"/>
 		</div>
 		<div id="canvas-div"><canvas id="canvas"></canvas></div>
 	</body>
