@@ -6,6 +6,8 @@ var perspectiveMatrix;	// matriz de perspectiva
 
 var rotX = 0, rotY = 0, transZ = 3, autorot = 0, atmosphereAutorot = 0;
 
+var INITIAL_ANIM_SPEED = 20, INITIAL_PERSISTENCE = 1, INITIAL_MULTIPLIER = 0.5;
+
 // Funcion de inicialización, se llama al cargar la página
 function InitWebGL() {
 	// Inicializamos el canvas WebGL
@@ -215,6 +217,17 @@ window.onload = function () {
 		// Reenderizamos
 		DrawScene();
 	}, 30);
+
+	let initialAnimationTimer = setInterval(function () {
+		continentOpts.multiplier = Math.min(continentOpts.multiplier + 0.001 * INITIAL_ANIM_SPEED, INITIAL_MULTIPLIER);
+		continentOpts.persistence = Math.min(continentOpts.persistence + 0.001 * 2 * INITIAL_ANIM_SPEED, INITIAL_PERSISTENCE);
+
+		meshDrawer.setParams(size, seed, continentOpts, oceanOpts);
+
+		if (continentOpts.multiplier === INITIAL_MULTIPLIER && continentOpts.persistence === INITIAL_PERSISTENCE) {
+			clearInterval(initialAnimationTimer);
+		}
+	}, 30);
 };
 
 // Evento resize
@@ -360,9 +373,9 @@ function ChangeSeaLine(seaLine) {
 var continentOpts = {
 	numLayers: 7,
 	scale: 400,
-	persistence: 1,
+	persistence: 0,
 	lacunarity: 0.3,
-	multiplier: 0.5,
+	multiplier: 0,
 };
 
 var oceanOpts = {
@@ -371,7 +384,7 @@ var oceanOpts = {
 	smoothing: 2
 };
 
-var mountainOpts = {
+/*var mountainOpts = {
 	numLayers: 3,
 	scale: 1,
 	blend: 1,
@@ -382,7 +395,7 @@ var mountainOpts = {
 	gain: 1,
 	offset: 1,
 	verticalShift: -1,
-};
+};*/
 
 function RecreateWorld() {
 	LoadObjFromString(new SphereCreator().createSphere(size, null), false);
